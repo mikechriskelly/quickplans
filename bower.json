@@ -3,15 +3,16 @@
   "version": "0.0.0",
   "dependencies": {
     "angular": "latest",
-    "json3": "latest",
-    "es5-shim": "latest",
-    "jquery": "latest",
-    "bootstrap-sass-official": "latest",
-    "angular-resource": "latest",
+    "angularAMD": "latest",
     "angular-cookies": "latest",
+    "angular-resource": "latest",
     "angular-sanitize": "latest",
     "angular-route": "latest",
-    "itemmirror": "http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min.js"
+    "es5-shim": "latest",
+    "bootstrap-sass-official": "latest",
+    "json3": "latest",
+    "jquery": "latest",
+    "requirejs": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",
