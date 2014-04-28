@@ -1,12 +1,13 @@
 'use strict';
 
-define(['angularAMD', 'angular-route', 'angular-cookies', 'angular-resource', 'angular-sanitize'], function (angularAMD) {
+define(['angularAMD', 'angular-route', 'angular-cookies', 'angular-resource', 'angular-sanitize', 'itemmirror'], function (angularAMD) {
   var app = angular
     .module('quickplansApp', [
       'ngRoute',
       'ngCookies',
       'ngResource',
-      'ngSanitize'
+      'ngSanitize',
+      'ItemMirror'
     ]);
 
   app.config(function ($routeProvider) {

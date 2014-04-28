@@ -1,18 +1,22 @@
 'use strict';
 
 define(['app'], function (app) {
-  app.register.controller('connect', function ($scope) {
+  app.register.controller('connect', ['$scope', 'ItemMirror'], function ($scope, ItemMirror) {
+
     console.log('connectDB working');
-    $scope.name = 'Read Me!';
-    $scope.listItems = 'list';
+        $scope.listItems = 'list';
     
     require(['ItemMirror', 'Dropbox'], function(ItemMirror, Dropbox){
       
+      $scope.name = 'Read Me!';
+
       // Test to make sure objects passed
-      console.dir(ItemMirror);
-      console.dir(Dropbox);
+      //console.dir(ItemMirror);
+      //console.dir(Dropbox);
 
       $scope.connect = function() {
+        console.log($scope);
+        $scope.itemList = ['Something','else'];
         var
           dropboxClientCredentials,
           dropboxClient,
@@ -73,11 +77,12 @@ define(['app'], function (app) {
         //item mirror object when you're ready
         dropboxClient.authenticate(function (error, client) {
           if (error) {
-            console.log(error);
             throw error;
           }
 
-          console.log('client: ' + client);
+          console.dir(client);
+          
+
 
           new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
             if (error) { throw error; }
@@ -96,17 +101,15 @@ define(['app'], function (app) {
               }else {
                 length = GUIDs.length;
               }
-              var displayText;
-              //var isGroupingItem;
               //loop across GUID up to length
-              //for (var i=0;i<length;i++){
-              itemMirror.getAssociationDisplayText(GUIDs[0], function(error, text){
-                displayText = text;
-                  //Check if this Association is a Grouping Item (a folder in the case of dropbox)
-              });
+                            for (var i=0;i<length;i++){
+                itemMirror.getAssociationDisplayText(GUIDs[i], function(error, text){
+                  $scope.itemList.push(text);
+                    //Check if this Association is a Grouping Item (a folder in the case of dropbox)
+                });
                 //Print the Association
                 //prntAssoc(error, displayText, GUIDs[i], itemMirror);
-              //}
+              }
               if (error) {
                 console.log(error);
               }

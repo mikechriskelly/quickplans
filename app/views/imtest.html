@@ -1,11 +1,6 @@
-<table>
-  <thead>
-    <tr><th colspan="4">Your Folders</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{{name}}</td>
-    </tr>
-  </tbody>
-</table>
-<a href="" ng-click="connect()">List Items Here</a>
+<h1>Your Folders</h1>
+<a href="" ng-click="connect()">Connect to Dropbox</a>
+<ul ng-repeat="item in itemList">
+  <li>{{item}}</li>
+</ul>
+{{name}}

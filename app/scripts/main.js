@@ -14,7 +14,7 @@ require.config({
     'bootstrap': '../bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap',
 
     // Externally Hosted Libraries
-    'ItemMirror': '//keepingfoundthingsfound.com/apps/_shared/ItemMirror.min',
+    'itemmirror': '../bower_components/itemmirror/index',
     'Dropbox': '//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min'
   },
   shim: {
@@ -23,7 +23,7 @@ require.config({
     'angular-cookies': ['angular'],
     'angular-resource': ['angular'],
     'angular-sanitize': ['angular'],
-    'ItemMirror': {exports: 'ItemMirror'},
+    'itemmirror': {exports: 'ItemMirror', deps: ['angular']},
     'Dropbox': {exports:'Dropbox'}
   },
   deps: ['app']
