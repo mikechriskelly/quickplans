@@ -11,6 +11,8 @@
     "angular-cookies": "latest",
     "angular-sanitize": "latest",
     "angular-route": "latest",
+    "requirejs": "~2.1.11",
+    "dropbox.min": "http://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js",
     "itemmirror": "http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min.js"
   },
   "devDependencies": {
