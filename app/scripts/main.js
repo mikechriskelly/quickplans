@@ -2,8 +2,8 @@ require.config({
   baseUrl: '/scripts',
   paths: {
     'jQuery': '//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min',
-    'angular': '//code.angularjs.org/1.2.0-rc.2/angular',
-    'angular-route': '../bower_components/angular-route/angular-route.min',
+    'angular': '../bower_components/angular/angular',
+    'angular-route': '../bower_components/angular-route/angular-route',
     'Dropbox': '//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min',
     'ItemMirror': 'http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min'
   },
@@ -13,10 +13,12 @@ require.config({
     'jQuery': {'exports' : 'jQuery'},
     'Dropbox' : {'exports': 'Dropbox'},
     //'ItemMirror' : {'exports': 'ItemMirror'}
-  }
+  },
+  priority: ['angular']
 });
 
-require(['jQuery', 'angular', 'Dropbox', 'ItemMirror', 'app'] , function ($, angular, Dropbox, ItemMirror, app) {
+// Initialize the app
+require(['jQuery', 'angular', 'angular-route', 'Dropbox', 'ItemMirror', 'app', 'routes'] , function ($, angular, Dropbox, ItemMirror, app, routes) {
   'use strict';
 
   // Confirm dependencies
@@ -27,4 +29,5 @@ require(['jQuery', 'angular', 'Dropbox', 'ItemMirror', 'app'] , function ($, ang
   $(function () { // using jQuery because it will run this even if DOM load already happened
     angular.bootstrap(document, ['app']);
   });
+
 });

@@ -7,19 +7,7 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
   // console.log('ItemMirror: ' + typeof(ItemMirror));
   // console.log('Dropbox: ' + typeof(Dropbox));
 
-  return angular.module('app' , [])
-
-  // .config(['$routeProvider', function ($routeProvider) {
-  //   $routeProvider
-  //     .when('/', {
-  //       templateUrl: 'views/main.html',
-  //       controller: 'MainCtrl',
-  //       //controllerUrl: 'scripts/controllers/connect.js'
-  //     })
-  //     .otherwise({
-  //       redirectTo: '/'
-  //     });
-  // }])
+  return angular.module('app' , ['ngRoute'])
 
   .controller('AppController', function AppController($scope) {
     $scope.name = 'World!';
