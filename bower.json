@@ -2,6 +2,9 @@
   "name": "quickplans",
   "version": "0.0.0",
   "dependencies": {
+    "requirejs": "~2.1.11",
+    "dropbox.min": "http://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js",
+    "itemmirror": "http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min.js",
     "angular": "latest",
     "json3": "latest",
     "es5-shim": "latest",
@@ -10,10 +13,7 @@
     "angular-resource": "latest",
     "angular-cookies": "latest",
     "angular-sanitize": "latest",
-    "angular-route": "latest",
-    "requirejs": "~2.1.11",
-    "dropbox.min": "http://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js",
-    "itemmirror": "http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min.js"
+    "angular-route": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",
