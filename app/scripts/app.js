@@ -89,20 +89,46 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
         deferred.reject(error);
       }
 
-      console.log('itemMirror object:');
-      console.dir(itemMirror);
+      // console.log('itemMirror object:');
+      // console.dir(itemMirror);
 
       // After async calls, call deferred.resolve with the response value
       deferred.resolve(itemMirror);
     });
 
-    deferred.promise
-    .then(connectDropbox)
-    .then(constructNewItemMirror)
-    .then(function(itemMirror) {
-      $scope.itemMirror = itemMirror;
-    }, function(errorReason) {
-      throw errorReason;
-    });
+    var listAssoc = function(itemMirror) {
+
+      // Test the itemMirror object
+      console.dir('itemMirror is an object? ' + typeof(itemMirror));
+      var inspectMethods = Object.getOwnPropertyNames(itemMirror).filter(function(property) {
+        return typeof itemMirror[property] == 'function';
+      });
+      console.log('List itemMirror methods: ' + inspectMethods);
+
+      // ERROR -- listAssociations isn't working
+      itemMirror.listAssociations(function (error, GUIDs) {
+        if (error) {
+          deferred.reject(error);
+        }
+      
+        deferred.resolve(GUIDs);
+      });
+    };
+
+    var displayAssoc = function(itemMirror, GUIDs) {
+      itemMirror.getAssociationDisplayText(GUIDs[0], function(error, text){
+        if (error) {
+          deferred.reject(error);
+        }
+      
+        deferred.resolve(text);
+      });
+    };
+
+    $scope.association = deferred.promise
+      .then(connectDropbox)
+      .then(constructNewItemMirror)
+      .then(listAssoc)
+      .then(displayAssoc);
   });
 });
