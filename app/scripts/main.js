@@ -3,14 +3,16 @@ require.config({
   paths: {
     'jQuery': '//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min',
     'angular': '//code.angularjs.org/1.2.0-rc.2/angular',
+    'angular-route': '../bower_components/angular-route/angular-route.min',
     'Dropbox': '//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min',
     'ItemMirror': 'http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min'
   },
   shim: {
     'angular' : {'exports' : 'angular'},
+    'angular-route': ['angular'],
     'jQuery': {'exports' : 'jQuery'},
     'Dropbox' : {'exports': 'Dropbox'},
-    'ItemMirror' : {'exports': 'ItemMirror'}
+    //'ItemMirror' : {'exports': 'ItemMirror'}
   }
 });
 

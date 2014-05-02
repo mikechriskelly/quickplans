@@ -1,4 +1,4 @@
-define(['angular'], function (angular) {
+define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
 
   'use strict';
 
@@ -9,7 +9,7 @@ define(['angular'], function (angular) {
 
   return angular.module('app' , [])
 
-  // .config(function ($routeProvider) {
+  // .config(['$routeProvider', function ($routeProvider) {
   //   $routeProvider
   //     .when('/', {
   //       templateUrl: 'views/main.html',
@@ -19,10 +19,10 @@ define(['angular'], function (angular) {
   //     .otherwise({
   //       redirectTo: '/'
   //     });
-  // })
+  // }])
 
   .controller('AppController', function AppController($scope) {
-    $scope.name = "World!";
+    $scope.name = 'World!';
   })
   .controller('MainCtrl', function MainCtrl($scope, $q) {
     var
