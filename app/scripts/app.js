@@ -1,15 +1,30 @@
-define(['angular'] , function (angular) {
+define(['angular'], function (angular) {
+
   'use strict';
-  
+
+  // Check if dependencies are in scope
+  // console.log('jquery: ' + typeof($));
+  // console.log('ItemMirror: ' + typeof(ItemMirror));
+  // console.log('Dropbox: ' + typeof(Dropbox));
+
   return angular.module('app' , [])
+
+  // .config(function ($routeProvider) {
+  //   $routeProvider
+  //     .when('/', {
+  //       templateUrl: 'views/main.html',
+  //       controller: 'MainCtrl',
+  //       //controllerUrl: 'scripts/controllers/connect.js'
+  //     })
+  //     .otherwise({
+  //       redirectTo: '/'
+  //     });
+  // })
 
   .controller('AppController', function AppController($scope) {
     $scope.name = "World!";
   })
-  .service('connectDropbox', function() {
-    // TODO
-  })
-  .controller('MainCtrl', function ($scope, $q) {
+  .controller('MainCtrl', function MainCtrl($scope, $q) {
     var
       dropboxClient,
       dropboxClientCredentials,
@@ -74,8 +89,8 @@ define(['angular'] , function (angular) {
         deferred.reject(error);
       }
 
-      console.log('Dropbox object:');
-      console.dir(client);
+      // console.log('Dropbox object:');
+      // console.dir(client);
 
       // After async calls, call deferred.resolve with the response value
       deferred.resolve(client);
@@ -96,7 +111,7 @@ define(['angular'] , function (angular) {
     deferred.promise
     .then(connectDropbox)
     .then(constructNewItemMirror)
-    .then(function() {
+    .then(function(itemMirror) {
       $scope.itemMirror = itemMirror;
     }, function(errorReason) {
       throw errorReason;
