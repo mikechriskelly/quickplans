@@ -77,8 +77,8 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
         deferred.reject(error);
       }
 
-      // console.log('Dropbox object:');
-      // console.dir(client);
+      console.log('Dropbox object:');
+      console.dir(client);
 
       // After async calls, call deferred.resolve with the response value
       deferred.resolve(client);
@@ -89,23 +89,18 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
         deferred.reject(error);
       }
 
-      // console.log('itemMirror object:');
-      // console.dir(itemMirror);
-
-      // After async calls, call deferred.resolve with the response value
+      console.log('itemMirror object step 1:');
+      console.log(itemMirror);
       deferred.resolve(itemMirror);
     });
 
     var listAssoc = function(itemMirror) {
 
-      // Test the itemMirror object
-      console.dir('itemMirror is an object? ' + typeof(itemMirror));
-      var inspectMethods = Object.getOwnPropertyNames(itemMirror).filter(function(property) {
-        return typeof itemMirror[property] == 'function';
-      });
-      console.log('List itemMirror methods: ' + inspectMethods);
+      // PROBLEM HERE -- Dropbox object was passed here, not itemMirror object
+      console.log('itemMirror object step 2:');
+      console.log(itemMirror);
 
-      // ERROR -- listAssociations isn't working
+      
       itemMirror.listAssociations(function (error, GUIDs) {
         if (error) {
           deferred.reject(error);
@@ -116,6 +111,10 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
     };
 
     var displayAssoc = function(itemMirror, GUIDs) {
+
+      console.log('itemMirror object step 3:');
+      console.log(itemMirror);
+
       itemMirror.getAssociationDisplayText(GUIDs[0], function(error, text){
         if (error) {
           deferred.reject(error);
