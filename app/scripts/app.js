@@ -70,64 +70,73 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       }
     };
 
-    var deferred = $q.defer();
 
-    var connectDropbox = dropboxClient.authenticate(function (error, client) {
-      if (error) {
-        deferred.reject(error);
-      }
+    function connectDropbox() {
+      var deferred = $q.defer();
+      dropboxClient.authenticate(function (error, client) {
+        
+        console.log('Dropbox object:');
+        console.dir(client);
 
-      console.log('Dropbox object:');
-      console.dir(client);
+        if (error) { deferred.reject(error); }
+        deferred.resolve(client);
+      });
+      return deferred.promise;
+    }
 
-      // After async calls, call deferred.resolve with the response value
-      deferred.resolve(client);
-    });
+    function constructNewItemMirror() {
+      var deferred = $q.defer();
+      new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
 
-    var constructNewItemMirror = new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
-      if (error) {
-        deferred.reject(error);
-      }
+        console.log('itemMirror object step 1:');
+        console.log(itemMirror);
 
-      console.log('itemMirror object step 1:');
-      console.log(itemMirror);
-      deferred.resolve(itemMirror);
-    });
+        if (error) { deferred.reject(error); }
+        deferred.resolve(itemMirror);
+      });
+      return deferred.promise;
+    }
 
-    var listAssoc = function(itemMirror) {
-
-      // PROBLEM HERE -- Dropbox object was passed here, not itemMirror object
-      console.log('itemMirror object step 2:');
-      console.log(itemMirror);
-
-      
+    function listAssoc(itemMirror) {
+      var deferred = $q.defer();
       itemMirror.listAssociations(function (error, GUIDs) {
-        if (error) {
-          deferred.reject(error);
-        }
-      
-        deferred.resolve(GUIDs);
+
+        console.log('itemMirror object step 2:');
+        console.log(itemMirror);
+        console.log('GUIDs: ' + GUIDs);
+     
+        if (error) { deferred.reject(error); }
+        deferred.resolve([itemMirror, GUIDs]);
       });
-    };
+      return deferred.promise;
+    }
 
-    var displayAssoc = function(itemMirror, GUIDs) {
+    function displayAssoc(itemMirrorGUID) {
+      var deferred = $q.defer();
+      var itemMirror = itemMirrorGUID[0];
+      var GUID = itemMirrorGUID[1];
 
-      console.log('itemMirror object step 3:');
-      console.log(itemMirror);
+      itemMirror.getAssociationDisplayText(GUID[0], function(error, displayText) {
 
-      itemMirror.getAssociationDisplayText(GUIDs[0], function(error, text){
-        if (error) {
-          deferred.reject(error);
-        }
-      
-        deferred.resolve(text);
+        console.log('itemMirror object step 3:');
+        console.log(itemMirror);
+        console.log('Text: ' + displayText);
+
+        if (error) { deferred.reject(error); }
+        deferred.resolve(displayText);
       });
-    };
+      return deferred.promise;
+    }
 
-    $scope.association = deferred.promise
-      .then(connectDropbox)
+    function logError(error) { console.log(error); }
+
+    $scope.association = connectDropbox()
       .then(constructNewItemMirror)
       .then(listAssoc)
-      .then(displayAssoc);
+      .then(displayAssoc)
+      .then(function(text) {
+        $scope.displayText = text;
+      })
+      .catch(logError);
   });
 });
