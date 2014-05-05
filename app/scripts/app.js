@@ -7,48 +7,35 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
   // console.log('ItemMirror: ' + typeof(ItemMirror));
   // console.log('Dropbox: ' + typeof(Dropbox));
 
-  return angular.module('app' , ['ngRoute'])
+  var app = angular.module('app' , ['ngRoute']);
 
-  .controller('AppController', function AppController($scope) {
-    $scope.name = 'World!';
-  })
-  .controller('MainCtrl', function MainCtrl($scope, $q) {
-    var
-      dropboxClient,
-      dropboxClientCredentials,
-      dropboxXooMLUtility,
-      dropboxItemUtility,
-      mirrorSyncUtility,
-      groupingItemURI,
-      itemMirrorOptions;
+  app.factory('IM', function($q) {
 
-    dropboxClientCredentials = {
+    var dropboxClientCredentials = {
       key: 'jrt7eykb5odmd98',
       secret: 'ayrxakqedjss46f'
     };
 
-    dropboxClient = new Dropbox.Client(dropboxClientCredentials);
+    var dropboxClient = new Dropbox.Client(dropboxClientCredentials);
 
-    dropboxXooMLUtility = {
+    var dropboxXooMLUtility = {
       driverURI: 'DropboxXooMLUtility',
       dropboxClient: dropboxClient
     };
-    dropboxItemUtility = {
+    var dropboxItemUtility = {
       driverURI: 'DropboxItemUtility',
       dropboxClient: dropboxClient
     };
-    mirrorSyncUtility = {
+    var mirrorSyncUtility = {
       utilityURI: 'MirrorSyncUtility'
     };
 
-    //This is the starting point where the initial item mirror item will be
-    //constructed: root. It can also be the name of
-    //or path to a folder you want to limit access to
-    groupingItemURI = '/'; //"Folder"
+    // Staring folder in Dropbox
+    var groupingItemURI = '/';
 
-    //Set up all of the item mirror options, even though
+    // Set up all of the item mirror options, even though
     //chances are the only one you're going to use is case 3
-    itemMirrorOptions = {
+    var itemMirrorOptions = {
       1: {
         groupingItemURI: groupingItemURI,
         xooMLDriver: dropboxXooMLUtility,
@@ -70,73 +57,106 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       }
     };
 
+    return {
+      
+      connectDropbox : function() {
+        var deferred = $q.defer();
+        dropboxClient.authenticate(function (error, client) {
+          
+          console.log('Dropbox object:');
+          console.dir(client);
 
-    function connectDropbox() {
-      var deferred = $q.defer();
-      dropboxClient.authenticate(function (error, client) {
+          if (error) { deferred.reject(error); }
+          deferred.resolve(client);
+        });
+        return deferred.promise;
+      },
+
+      constructNewItemMirror : function() {
+        var deferred = $q.defer();
+        new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
+
+          console.log('itemMirror object step 1:');
+          console.log(itemMirror);
+
+          if (error) { deferred.reject(error); }
+          deferred.resolve(itemMirror);
+        });
+        return deferred.promise;
+      },
+
+      listAssoc : function(itemMirror) {
+        var deferred = $q.defer();
+        itemMirror.listAssociations(function (error, GUIDs) {
+
+          console.log('itemMirror object step 2:');
+          console.log(itemMirror);
+          console.log('GUIDs: ' + GUIDs);
+       
+          if (error) { deferred.reject(error); }
+          deferred.resolve([itemMirror, GUIDs]);
+        });
+        return deferred.promise;
+      },
+
+      displayAssoc : function(itemMirrorGUID) {
+        var deferred = $q.defer();
+        var itemMirror = itemMirrorGUID[0];
+        var GUID = itemMirrorGUID[1];
+
+        itemMirror.getAssociationDisplayText(GUID[0], function(error, displayText) {
+
+          console.log('itemMirror object step 3:');
+          console.log(itemMirror);
+          console.log('Text: ' + displayText);
+
+          if (error) { deferred.reject(error); }
+          deferred.resolve(displayText);
+        });
+        return deferred.promise;
+      },
+
+      displayAllAssoc : function(itemMirrorGUID) {
         
-        console.log('Dropbox object:');
-        console.dir(client);
+        var promiseArray = [];
+        var itemMirror = itemMirrorGUID[0];
+        var GUIDs = itemMirrorGUID[1];
 
-        if (error) { deferred.reject(error); }
-        deferred.resolve(client);
-      });
-      return deferred.promise;
-    }
-
-    function constructNewItemMirror() {
-      var deferred = $q.defer();
-      new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
-
-        console.log('itemMirror object step 1:');
-        console.log(itemMirror);
-
-        if (error) { deferred.reject(error); }
-        deferred.resolve(itemMirror);
-      });
-      return deferred.promise;
-    }
-
-    function listAssoc(itemMirror) {
-      var deferred = $q.defer();
-      itemMirror.listAssociations(function (error, GUIDs) {
-
-        console.log('itemMirror object step 2:');
-        console.log(itemMirror);
-        console.log('GUIDs: ' + GUIDs);
-     
-        if (error) { deferred.reject(error); }
-        deferred.resolve([itemMirror, GUIDs]);
-      });
-      return deferred.promise;
-    }
-
-    function displayAssoc(itemMirrorGUID) {
-      var deferred = $q.defer();
-      var itemMirror = itemMirrorGUID[0];
-      var GUID = itemMirrorGUID[1];
-
-      itemMirror.getAssociationDisplayText(GUID[0], function(error, displayText) {
-
-        console.log('itemMirror object step 3:');
-        console.log(itemMirror);
-        console.log('Text: ' + displayText);
-
-        if (error) { deferred.reject(error); }
-        deferred.resolve(displayText);
-      });
-      return deferred.promise;
-    }
-
-    function logError(error) { console.log(error); }
-
-    $scope.association = connectDropbox()
-      .then(constructNewItemMirror)
-      .then(listAssoc)
-      .then(displayAssoc)
-      .then(function(text) {
-        $scope.displayText = text;
-      })
-      .catch(logError);
+        for(var i = 0; i < GUIDs.length; i++ ) {
+          itemMirror.getAssociationDisplayText(GUIDs[i], function(error, displayText) {
+            var deferred = $q.defer();
+            if (error) { deferred.reject(error); }
+            deferred.resolve(displayText);
+            promiseArray.push(deferred.promise);
+          });
+        }
+        return $q.all(promiseArray);
+      }
+    };
   });
+
+  app.controller('AppController', function AppController($scope) {
+    $scope.name = 'World!';
+  });
+
+  app.controller('MainCtrl', function MainCtrl($scope, IM) {
+    $scope.status = 'Loading Associations...';
+
+    IM.connectDropbox()
+    .then(IM.constructNewItemMirror)
+    .then(function(result) {
+      $scope.itemMirror = result;
+      return result;
+    })
+    .then(IM.listAssoc)
+    .then(IM.displayAllAssoc)
+    .then(function(result) {
+      $scope.associations = result;
+      $scope.status = 'success';
+      $scope.loaded = true;
+    });
+  });
+
+  return app;
 });
+
