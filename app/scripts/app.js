@@ -169,9 +169,16 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
     .then(IM.listAssoc)
     .then(IM.displayAllAssoc)
     .then(function(result) {
+      // Bind results to scope
       $scope.associations = result;
       $scope.status = 'success';
       $scope.loaded = true;
+    }, function(reason) {
+      //Catch errors in the chain
+      console.log('Failed: ' + reason);
+    }, function(update) {
+      // Report status update in the chain
+      console.log('Got notification: ' + update);
     });
   });
 
