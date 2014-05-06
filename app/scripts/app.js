@@ -118,6 +118,24 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
 
       displayAllAssoc : function(itemMirrorGUID) {
         
+        var itemMirror = itemMirrorGUID[0];
+        var GUIDs = itemMirrorGUID[1];
+
+        var promises = GUIDs.map(function(GUID) {
+          var deferred  = $q.defer();
+          
+          itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
+            if (error) { deferred.reject(error); }
+            deferred.resolve(displayText);
+          });
+
+          return deferred.promise;
+        });
+
+        return $q.all(promises);
+      },
+      displayAllAssocOrig : function(itemMirrorGUID) {
+        
         var promiseArray = [];
         var itemMirror = itemMirrorGUID[0];
         var GUIDs = itemMirrorGUID[1];
