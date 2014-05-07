@@ -86,9 +86,13 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       return deferred.promise;
     };
 
-    IM.getAssociationGUIDs = function() {
+    IM.getAssociationGUIDs = function(itemMirror) {
       var deferred = $q.defer();
-      IM.itemMirror.listAssociations(function (error, GUIDs) {
+      
+      // If no param passed use constructed itemMirror object
+      itemMirror = itemMirror || IM.itemMirror;
+      
+      itemMirror.listAssociations(function (error, GUIDs) {
 
         // Save GUIDs into factory object for reuse
         IM.GUIDs = GUIDs;
@@ -103,7 +107,6 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       var deferred = $q.defer();
 
       IM.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
-
         if (error) { deferred.reject(error); }
         deferred.resolve(displayText);
       });
@@ -126,6 +129,21 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       return $q.all(promises);
     };
 
+    IM.getChild = function(GUID) {
+      var deferred = $q.defer();
+      IM.itemMirror.createItemMirrorForAssociatedGroupingItem(GUID, function(error, childItemMirror) {
+
+        // Save itemMirror object into factory object for reuse
+        IM.childItemMirror = childItemMirror;
+        console.log('Child itemmirror: ');
+        console.dir(childItemMirror);
+
+        if (error) { deferred.reject(error); }
+        deferred.resolve(childItemMirror);
+      });
+      return deferred.promise;
+    };
+
     return IM;
   });
 
@@ -145,6 +163,7 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       $scope.associations = result;
       $scope.status = 'success';
       $scope.loaded = true;
+      $scope.GUIDs = IM.GUIDs;
     }, function(reason) {
       //Catch errors in the chain
       console.log('Failed: ' + reason);
@@ -152,6 +171,21 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       // Report status update in the chain
       console.log('Got notification: ' + update);
     });
+
+    $scope.showChild = function() {
+      IM.getChild($scope.GUIDs[0])
+        .then(IM.getAssociationName)
+        .then(function(result) {
+          $scope.childAssociation = result;
+        }, function(reason) {
+          //Catch errors in the chain
+          console.log('Failed: ' + reason);
+        }, function(update) {
+          // Report status update in the chain
+          console.log('Got notification: ' + update);
+        });
+    };
+
   });
 
   return app;
