@@ -57,100 +57,76 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       }
     };
 
-    return {
+    var IM = {};
       
-      connectDropbox : function() {
-        var deferred = $q.defer();
-        dropboxClient.authenticate(function (error, client) {
-          
-          console.log('Dropbox object:');
-          console.dir(client);
+    IM.connectDropbox = function() {
+      var deferred = $q.defer();
 
-          if (error) { deferred.reject(error); }
-          deferred.resolve(client);
-        });
-        return deferred.promise;
-      },
+      dropboxClient.authenticate(function (error, client) {
+        
+        console.log('Dropbox object:');
+        console.dir(client);
 
-      constructNewItemMirror : function() {
-        var deferred = $q.defer();
-        new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
+        if (error) { deferred.reject(error); }
+        deferred.resolve(client);
+      });
+      return deferred.promise;
+    };
 
-          console.log('itemMirror object step 1:');
-          console.log(itemMirror);
+    IM.constructItemMirror = function() {
+      var deferred = $q.defer();
+      new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
 
-          if (error) { deferred.reject(error); }
-          deferred.resolve(itemMirror);
-        });
-        return deferred.promise;
-      },
+        // Save itemMirror object into factory object for reuse
+        IM.itemMirror = itemMirror;
 
-      listAssoc : function(itemMirror) {
-        var deferred = $q.defer();
-        itemMirror.listAssociations(function (error, GUIDs) {
+        if (error) { deferred.reject(error); }
+        deferred.resolve(itemMirror);
+      });
+      return deferred.promise;
+    };
 
-          console.log('itemMirror object step 2:');
-          console.log(itemMirror);
-          console.log('GUIDs: ' + GUIDs);
-       
-          if (error) { deferred.reject(error); }
-          deferred.resolve([itemMirror, GUIDs]);
-        });
-        return deferred.promise;
-      },
+    IM.getAssociationGUIDs = function() {
+      var deferred = $q.defer();
+      IM.itemMirror.listAssociations(function (error, GUIDs) {
 
-      displayAssoc : function(itemMirrorGUID) {
-        var deferred = $q.defer();
-        var itemMirror = itemMirrorGUID[0];
-        var GUID = itemMirrorGUID[1];
+        // Save GUIDs into factory object for reuse
+        IM.GUIDs = GUIDs;
+     
+        if (error) { deferred.reject(error); }
+        deferred.resolve(GUIDs);
+      });
+      return deferred.promise;
+    };
 
-        itemMirror.getAssociationDisplayText(GUID[0], function(error, displayText) {
+    IM.getAssociationName = function(GUID) {
+      var deferred = $q.defer();
 
-          console.log('itemMirror object step 3:');
-          console.log(itemMirror);
-          console.log('Text: ' + displayText);
+      IM.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
 
+        if (error) { deferred.reject(error); }
+        deferred.resolve(displayText);
+      });
+      return deferred.promise;
+    };
+
+    IM.getAssociationNames = function(GUIDs) {
+
+      var promises = GUIDs.map(function(GUID) {
+        var deferred  = $q.defer();
+        
+        IM.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
           if (error) { deferred.reject(error); }
           deferred.resolve(displayText);
         });
+
         return deferred.promise;
-      },
+      });
 
-      displayAllAssoc : function(itemMirrorGUID) {
-        
-        var itemMirror = itemMirrorGUID[0];
-        var GUIDs = itemMirrorGUID[1];
-
-        var promises = GUIDs.map(function(GUID) {
-          var deferred  = $q.defer();
-          
-          itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
-            if (error) { deferred.reject(error); }
-            deferred.resolve(displayText);
-          });
-
-          return deferred.promise;
-        });
-
-        return $q.all(promises);
-      },
-      displayAllAssocOrig : function(itemMirrorGUID) {
-        
-        var promiseArray = [];
-        var itemMirror = itemMirrorGUID[0];
-        var GUIDs = itemMirrorGUID[1];
-
-        for(var i = 0; i < GUIDs.length; i++ ) {
-          itemMirror.getAssociationDisplayText(GUIDs[i], function(error, displayText) {
-            var deferred = $q.defer();
-            if (error) { deferred.reject(error); }
-            deferred.resolve(displayText);
-            promiseArray.push(deferred.promise);
-          });
-        }
-        return $q.all(promiseArray);
-      }
+      return $q.all(promises);
     };
+
+    return IM;
   });
 
   app.controller('AppController', function AppController($scope) {
@@ -161,13 +137,9 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
     $scope.status = 'Loading Associations...';
 
     IM.connectDropbox()
-    .then(IM.constructNewItemMirror)
-    .then(function(result) {
-      $scope.itemMirror = result;
-      return result;
-    })
-    .then(IM.listAssoc)
-    .then(IM.displayAllAssoc)
+    .then(IM.constructItemMirror)
+    .then(IM.getAssociationGUIDs)
+    .then(IM.getAssociationNames)
     .then(function(result) {
       // Bind results to scope
       $scope.associations = result;
