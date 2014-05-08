@@ -86,6 +86,16 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
       return deferred.promise;
     };
 
+    IM.getDisplayName = function() {
+      var deferred = $q.defer();
+
+      IM.itemMirror.getDisplayName(function(error, displayName) {
+        if (error) { deferred.reject(error); }
+        deferred.resolve(displayName);
+      });
+      return deferred.promise;
+    };
+
     IM.getAssociationGUIDs = function(itemMirror) {
       var deferred = $q.defer();
       
@@ -99,16 +109,6 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
      
         if (error) { deferred.reject(error); }
         deferred.resolve(GUIDs);
-      });
-      return deferred.promise;
-    };
-
-    IM.getAssociationName = function(GUID) {
-      var deferred = $q.defer();
-
-      IM.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
-        if (error) { deferred.reject(error); }
-        deferred.resolve(displayText);
       });
       return deferred.promise;
     };
@@ -174,9 +174,12 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
 
     $scope.showChild = function() {
       IM.getChild($scope.GUIDs[0])
-        .then(IM.getAssociationName)
+        // Creates a new itemMirror object but it is not saved in the IM service
+        // The IM service is only 1 object and it currently stores only 1 itemMirror object 
+        //.then(IM.getAssociationGUIDs)
+        //.then(IM.getAssociationNames)
         .then(function(result) {
-          $scope.childAssociation = result;
+          $scope.childItemMirror = result;
         }, function(reason) {
           //Catch errors in the chain
           console.log('Failed: ' + reason);
