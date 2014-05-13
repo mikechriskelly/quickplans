@@ -214,7 +214,7 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
         });
     };
 
-    $scope.content = "<h3>I'm editable</h3><p>Don't believe me? Just click this block and start typing!</p><p>Assuming you just dasdfid, how cool is that?!</p>";
+    $scope.content = "<h2>I'm editable</h2><ul><li>Don't believe me?</li><li>Just click this block and start typing!</li><li>Assuming you just dasdfid, how cool is that?!</li></ul>";
 
   });
 
