@@ -30,6 +30,13 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
                   ngModel.$setViewValue(element.html());
                   scope.$apply();
               });
+
+              element.on('keydown', function($event){
+                if($event.which === 13) {
+                  $event.preventDefault();
+                  element.next().focus();
+                }
+              });
           }
       };
   });

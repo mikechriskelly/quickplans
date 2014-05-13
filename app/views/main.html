@@ -7,7 +7,7 @@
 </div>
 <div>
   <ul>
-    <li hallo ng-model="item" ng-repeat="item in associations">{{ item }}</li>
+    <li hallo ng-model="item" ng-repeat="item in associations" ng-keydown="$event">{{ item }}</li>
   </ul>
   <ul>
     <li>Item 1</li>
