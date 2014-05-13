@@ -9,6 +9,31 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
 
   var app = angular.module('app' , ['ngRoute']);
 
+  app.directive('hallo', function() {
+      return {
+          restrict: 'A',
+          require: '?ngModel',
+          link: function(scope, element, attrs, ngModel) {
+              if (!ngModel) {
+                  return;
+              }
+
+              element.hallo({
+                 plugins: {}
+              });
+
+              ngModel.$render = function() {
+                  element.html(ngModel.$viewValue || '');
+              };
+
+              element.on('hallodeactivated', function() {
+                  ngModel.$setViewValue(element.html());
+                  scope.$apply();
+              });
+          }
+      };
+  });
+
   app.factory('IM', function($q) {
 
     var dropboxClientCredentials = {
@@ -188,6 +213,8 @@ define(['angular', 'ItemMirror'], function (angular, ItemMirror) {
           console.log('Got notification: ' + update);
         });
     };
+
+    $scope.content = "<h3>I'm editable</h3><p>Don't believe me? Just click this block and start typing!</p><p>Assuming you just dasdfid, how cool is that?!</p>";
 
   });
 

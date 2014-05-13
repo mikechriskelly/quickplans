@@ -3,19 +3,20 @@ require.config({
   paths: {
     'jQuery': '../bower_components/jquery/jquery.min',
     'jQuery-UI': '../bower_components/jquery-ui/ui/jquery-ui',
+    'Rangy': '../bower_components/rangy/rangy-core',
+    'Hallo': '../bower_components/hallo.js/hallo',
     'angular': '../bower_components/angular/angular',
     'angular-route': '../bower_components/angular-route/angular-route',
     'Dropbox': '//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min',
-    'ItemMirror': 'http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min',
-    'Hallo': '../bower_components/hallo.js/hallo',
-    'Rangy': '../bower_components/rangy/rangy-core'
+    'ItemMirror': 'http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min'
   },
   shim: {
     'angular' : {'exports' : 'angular'},
     'angular-route': ['angular'],
     'jQuery': {'exports' : 'jQuery'},
+    'Rangy' : {'exports' : 'rangy'},
     'Dropbox' : {'exports': 'Dropbox'},
-    'Hallo': ['jQuery', 'jQuery-UI' ,'Rangy']
+    'Hallo': ['jQuery', 'jQuery-UI' , 'Rangy']
     //'ItemMirror' : {'exports': 'ItemMirror'}
   },
   priority: ['angular']
