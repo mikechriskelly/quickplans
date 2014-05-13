@@ -9,6 +9,7 @@
     "json3": "latest",
     "es5-shim": "latest",
     "jquery": "latest",
+    "hallo.js": "latest",
     "bootstrap-sass-official": "latest",
     "angular-resource": "latest",
     "angular-cookies": "latest",
