@@ -10,9 +10,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
   services.factory('IM', ['$q',function($q) {
 
     var dropboxClientCredentials = {
-      key: 'wsvaq6pyykd3mi8',
-      secret: 'fqnw1x9o91han3c',
-      token: 'xRhoafCazcIAAAAAAAAAVjksVLK3z90uaU4cMqUErZQsrJfKOI5_vv4jOJGZxvD5'
+      key: 'jrt7eykb5odmd98',
+      secret: 'ayrxakqedjss46f',
+      //token: 'xRhoafCazcIAAAAAAAAAVjksVLK3z90uaU4cMqUErZQsrJfKOI5_vv4jOJGZxvD5'
     };
 
     var dropboxClient = new Dropbox.Client(dropboxClientCredentials);
@@ -57,6 +57,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
     };
 
     var IM = {};
+    IM.itemMirror = null; // IM is a wrapper for this itemMirror object
       
     IM.connectDropbox = function() {
       var deferred = $q.defer();
@@ -72,7 +73,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       return deferred.promise;
     };
 
-    IM.constructItemMirror = function() {
+    // Use this when creating the original itemMirror object based on Dropbox
+    IM.newItemMirror = function() {
       var deferred = $q.defer();
       new ItemMirror(itemMirrorOptions[3], function (error, itemMirror) {
 
@@ -95,7 +97,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       return deferred.promise;
     };
 
-    IM.getAssociationGUIDs = function(itemMirror) {
+    IM.listAssociations = function(itemMirror) {
       var deferred = $q.defer();
       
       // If no param passed use constructed itemMirror object
@@ -112,7 +114,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       return deferred.promise;
     };
 
-    IM.getAssociationNames = function(GUIDs) {
+    IM.getAssociationDisplayText = function(GUIDs) {
 
       var promises = GUIDs.map(function(GUID) {
         var deferred  = $q.defer();

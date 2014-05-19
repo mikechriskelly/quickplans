@@ -12,9 +12,9 @@ define(['./module','angular'],
     $scope.status = 'Loading Associations...';
 
     IM.connectDropbox()
-    .then(IM.constructItemMirror)
-    .then(IM.getAssociationGUIDs)
-    .then(IM.getAssociationNames)
+    .then(IM.newItemMirror)
+    .then(IM.listAssociations)
+    .then(IM.getAssociationDisplayText)
     .then(function(result) {
       // Bind results to scope
       $scope.associations = result;
