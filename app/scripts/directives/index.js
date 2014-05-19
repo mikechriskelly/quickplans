@@ -1,0 +1,3 @@
+define([
+     './hallo-directives'
+], function () {});

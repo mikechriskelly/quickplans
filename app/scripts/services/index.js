@@ -1,0 +1,3 @@
+define([
+	'./itemmirror-service'
+	], function () {});

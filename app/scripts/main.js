@@ -25,7 +25,7 @@ require.config({
 // Initialize the app
 require(['jQuery', 'angular', 'angular-route', 'Dropbox', 'ItemMirror', 'Hallo', 'app', 'routes'],
   function ($, angular, Dropbox, ItemMirror, Hallo, app, routes) {
-    'use strict';
+    'use strict';   
 
     // Confirm dependencies
     // console.log('jquery: ' + typeof($));
