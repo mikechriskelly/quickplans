@@ -1,30 +1,34 @@
-<div class="jumbotron">
-  <h1>ItemMirror!</h1>
-  <p><a class="btn btn-lg" ng-class="loaded? 'btn-success': 'btn-warning'" ng-href="#">{{status}} <span ng-if="loaded" class="glyphicon glyphicon-ok"></span></a> <a class="btn btn-lg btn-info" ng-click="showChild()">Show Children</a></p>
-</div>
+
 <div class="container">
-  <div hallo ng-model="content"></div>
-</div>
-<div>
-  <ul>
-    <li hallo ng-model="item" ng-repeat="item in associations" ng-keydown="$event">{{ item }}</li>
-  </ul>
-  <ul>
-    <li>Item 1</li>
-    <li style="list-style-type:none">
+  <div class="row">
+    <div class="col-md-6">
       <ul>
-        <li>Item 1.1</li>
-        <li>Item 1.2</li>
+        <li hallo ng-model="item" ng-repeat="item in associations" ng-keydown="$event">{{ item }}</li>
+      </ul>
+      <ul>
+        <li>Item 1</li>
         <li style="list-style-type:none">
           <ul>
-            <li>Item 1.2.1</li>
-            <li>Item 1.2.2</li>
+            <li>Item 1.1</li>
+            <li>Item 1.2</li>
+            <li style="list-style-type:none">
+              <ul>
+                <li>Item 1.2.1</li>
+                <li>Item 1.2.2</li>
+              </ul>
+            </li>
+            <li>Item 1.3</li>
           </ul>
         </li>
-        <li>Item 1.3</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
       </ul>
-    </li>
-    <li>Item 2</li>
-    <li>Item 3</li>
-  </ul>
+    </div>
+    <div class="col-md-6">
+        <h3>ItemMirror</h3>
+        <p><a class="btn btn-lg" ng-class="loaded? 'btn-success': 'btn-warning'" ng-href="#">{{status}} <span ng-if="loaded" class="glyphicon glyphicon-ok"></span></a></p>
+        <!-- <br><a class="btn btn-lg btn-info" ng-click="showChild()">Show Children</a> -->
+        <div hallo ng-model="content"></div>
+    </div>
+  </div>
 </div>
