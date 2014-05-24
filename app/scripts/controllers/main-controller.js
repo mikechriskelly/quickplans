@@ -16,11 +16,11 @@ define(['./module','angular'],
         function(result){
            var im = new IM(result);
            im.constructItemMirror()
-           .then( function(){ console.log(im) })
-           .then(im.getAssociationGUIDs)
-           .then(im.getAssociationNames)
+           .then( function() { return im.getAssociationGUIDs(); })
+           .then( function() { return im.getAssociationNames(); })
            .then(function(result){
                 //Bind results to scope
+                console.log(result);
                $scope.associations = result;
                $scope.status = 'success';
                $scope.loaded = true;
