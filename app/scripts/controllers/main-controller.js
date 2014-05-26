@@ -8,27 +8,30 @@ define(['./module','angular'],
   // console.log('ItemMirror: ' + typeof(ItemMirror));
   // console.log('Dropbox: ' + typeof(Dropbox));
 
-  controllers.controller('MainCtrl', ['$scope','IM',function ($scope, IM) {
+  controllers.controller('MainCtrl', ['$scope','dropboxAuth','IM', function ($scope, dropboxAuth, IM) {
     $scope.status = 'Loading Associations...';
 
-    IM.connectDropbox()
-    .then(IM.newItemMirror)
-    .then(IM.listAssociations)
-    .then(IM.getAssociationDisplayText)
-    .then(function(result) {
-      // Bind results to scope
-      $scope.associations = result;
-      $scope.status = 'success';
-      $scope.loaded = true;
-      $scope.GUIDs = IM.GUIDs;
-    }, function(reason) {
-      //Catch errors in the chain
-      console.log('Failed: ' + reason);
-    }, function(update) {
-      // Report status update in the chain
-      console.log('Got notification: ' + update);
-    });
-
+    dropboxAuth.connectDropbox()
+    .then(
+        function(result){
+           var im = new IM(result);
+           im.constructItemMirror()
+           .then( function() { return im.getAssociationGUIDs(); })
+           .then( function() { return im.getAssociationNames(); })
+           .then(function(result){
+                //Bind results to scope
+                console.log(result);
+               $scope.associations = result;
+               $scope.status = 'success';
+               $scope.loaded = true;
+               $scope.GUIDs = im.GUIDs;
+              }, function(reason) {
+               //Catch errors in the chain
+               console.log('Failed: ' + reason);
+             })
+        }
+    )
+    
     $scope.content = "<h2>I'm editable</h2><ul><li>Don't believe me?</li><li>Just click this block and start typing!</li><li>Assuming you just dasdfid, how cool is that?!</li></ul>";
 
   }]);
