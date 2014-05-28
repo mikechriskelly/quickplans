@@ -16,8 +16,8 @@ define(['./module','angular'],
         function(result){
            var im = new IM(result);
            im.constructItemMirror()
-           .then( function() { return im.getAssociationGUIDs(); })
-           .then( function() { return im.getAssociationNames(); })
+           .then(function() { return im.getAssociationGUIDs(); })
+           .then(function() { return im.getAssociationNames(); })
            .then(function(result){
                 //Bind results to scope
                 console.log(result);
@@ -35,39 +35,6 @@ define(['./module','angular'],
 
                console.log($scope.list);
 
-              // $scope.list = [{
-              //   "id": 1,
-              //   "title": "1. dragon-breath",
-              //   "items": []
-              // }, {
-              //   "id": 2,
-              //   "title": "2. moiré-vision",
-              //   "items": [{
-              //     "id": 21,
-              //     "title": "2.1. tofu-animation",
-              //     "items": [{
-              //       "id": 211,
-              //       "title": "2.1.1. spooky-giraffe",
-              //       "items": []
-              //     }, {
-              //       "id": 212,
-              //       "title": "2.1.2. bubble-burst",
-              //       "items": []
-              //     }],
-              //   }, {
-              //     "id": 22,
-              //     "title": "2.2. barehand-atomsplitting",
-              //     "items": []
-              //   }],
-              // }, {
-              //   "id": 3,
-              //   "title": "3. unicorn-zapper",
-              //   "items": []
-              // }, {
-              //   "id": 4,
-              //   "title": "4. romantic-transclusion",
-              //   "items": []
-              // }];
 
               $scope.selectedItem = {};
 
@@ -80,6 +47,13 @@ define(['./module','angular'],
 
               $scope.toggle = function(scope) {
                 scope.toggle();
+              };
+
+              // Trying to toggle drag. Not working yet.
+              $scope.dragEnabled = function(scope) {
+                console.log(scope);
+                console.log(scope.$parent);
+                scope.$parent.dragEnabled();
               };
 
               $scope.newSubItem = function(scope) {
@@ -100,9 +74,6 @@ define(['./module','angular'],
              })
         }
     )
-    
-    $scope.content = "<h2>I'm editable</h2><ul><li>Don't believe me?</li><li>Just click this block and start typing!</li><li>Assuming you just dasdfid, how cool is that?!</li></ul>";
-
   }]);
 
 });

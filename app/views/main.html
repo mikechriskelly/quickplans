@@ -1,58 +1,56 @@
+<h3>Quickplans</h3>
+<p>{{status}} <span ng-if="loaded" class="glyphicon glyphicon-ok"></span></p>
 
-<div class="container">
-  <h3>Quickplans</h3>
-  <p>{{status}} <span ng-if="loaded" class="glyphicon glyphicon-ok"></span></p>
+<div class="row">
+  <div class="col-md-6">
 
-  <div class="row">
-    <div class="col-md-6">
-
-      <!-- Nested list template -->
-      <h2>Editable List</h2>
-      <script type="text/ng-template" id="items_renderer.html">
-        <div ui-tree-handle data-nodrag>
-          <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)">
-            <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
-          </a>
-          <hallo ng-model="item.title" class="listitem-text">{{item.title}}</hallo>
-          <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
-          <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
-          <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer.html'">
-          </li>
-        </ol>
-      </script>
-      <div ui-tree="options">
-        <ol ui-tree-nodes ng-model="list" >
-          <li ng-repeat="item in list" ui-tree-node ng-include="'items_renderer.html'"></li>
-        </ol>
+    <!-- Nested list template -->
+    <h2>Editable List</h2>
+    <script type="text/ng-template" id="items_renderer.html">
+      <div ui-tree-handle data-nodrag>
+        <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)">
+          <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+        </a>
+        <hallo ng-model="item.title" class="listitem-text">{{item.title}}</hallo>
+        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
+        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="dragEnabled(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-move"></span></a>
       </div>
-
+      <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
+        <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer.html'">
+        </li>
+      </ol>
+    </script>
+    <div ui-tree="options">
+      <ol ui-tree-nodes ng-model="list" >
+        <li ng-repeat="item in list" ui-tree-node ng-include="'items_renderer.html'"></li>
+      </ol>
     </div>
-    <div class="col-md-6">
 
-      <!-- Nested list template -->
-      <h2>Draggable List</h2>
-      <script type="text/ng-template" id="items_renderer2.html">
-        <div ui-tree-handle>
-          <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)">
-            <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
-          </a>
-          <hallo ng-model="item.title" class="listitem-text">{{item.title}}</hallo>
-          <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
-          <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
-        </div>
-        <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
-          <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer2.html'">
-          </li>
-        </ol>
-      </script>
-      <div ui-tree="options">
-        <ol ui-tree-nodes ng-model="list" >
-          <li ng-repeat="item in list" ui-tree-node ng-include="'items_renderer2.html'"></li>
-        </ol>
+  </div>
+  <div class="col-md-6">
+
+    <!-- Nested list template -->
+    <h2>Draggable List</h2>
+    <script type="text/ng-template" id="items_renderer2.html">
+      <div ui-tree-handle>
+        <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)">
+          <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+        </a>
+        <hallo ng-model="item.title" class="listitem-text">{{item.title}}</hallo>
+        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
       </div>
-
+      <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
+        <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer2.html'">
+        </li>
+      </ol>
+    </script>
+    <div ui-tree="options">
+      <ol ui-tree-nodes ng-model="list" >
+        <li ng-repeat="item in list" ui-tree-node ng-include="'items_renderer2.html'"></li>
+      </ol>
     </div>
+
   </div>
 </div>
