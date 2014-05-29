@@ -76,7 +76,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var deferred = $q.defer();
         this.itemMirror.listAssociations(function (error, GUIDs) {
           // Save GUIDs into factory object for reuse
-          self.GUIDs = GUIDs;
+          self.associationGUIDs = GUIDs;
           if (error) { deferred.reject(error); }
           deferred.resolve(GUIDs);
         });
