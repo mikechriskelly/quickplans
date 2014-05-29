@@ -16,12 +16,55 @@ define(['./module','angular'],
         function(result){
            var im = new IM(result);
            im.constructItemMirror()
-           .then( function() { return im.getAssociationGUIDs(); })
-           .then( function() { return im.getAssociationNames(); })
+           .then(function() { return im.getAssociationGUIDs(); })
+           .then(function() { return im.getAssociationNames(); })
            .then(function(result){
                 //Bind results to scope
                 console.log(result);
                $scope.associations = result;
+
+               $scope.list = [];
+          
+               for(var i=0; i < result.length; i++) {
+                  var item={};
+                  item.id = i;
+                  item.title = result[i];
+                  item.items = [];
+                  $scope.list.push(item);
+               }
+
+               console.log($scope.list);
+
+
+              $scope.selectedItem = {};
+
+              $scope.options = {
+              };
+
+              $scope.remove = function(scope) {
+                scope.remove();
+              };
+
+              $scope.toggle = function(scope) {
+                scope.toggle();
+              };
+
+              // Trying to toggle drag. Not working yet.
+              $scope.dragEnabled = function(scope) {
+                console.log(scope);
+                console.log(scope.$parent);
+                scope.$parent.dragEnabled();
+              };
+
+              $scope.newSubItem = function(scope) {
+                var nodeData = scope.$modelValue;
+                nodeData.items.push({
+                  id: nodeData.id * 10 + nodeData.items.length,
+                  title: nodeData.title + '.' + (nodeData.items.length + 1),
+                  items: []
+                });
+              };
+
                $scope.status = 'success';
                $scope.loaded = true;
                $scope.GUIDs = im.GUIDs;
@@ -31,9 +74,6 @@ define(['./module','angular'],
              })
         }
     )
-    
-    $scope.content = "<h2>I'm editable</h2><ul><li>Don't believe me?</li><li>Just click this block and start typing!</li><li>Assuming you just dasdfid, how cool is that?!</li></ul>";
-
   }]);
 
 });

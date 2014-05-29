@@ -10,9 +10,9 @@ define(['./module','angular'], function (services,angular) {
   services.factory('dropboxAuth', ['$q',function($q) {
 
     var dropboxClientCredentials = {
-      key: 'wsvaq6pyykd3mi8',
-      secret: 'fqnw1x9o91han3c',
-      token: 'xRhoafCazcIAAAAAAAAAVjksVLK3z90uaU4cMqUErZQsrJfKOI5_vv4jOJGZxvD5'
+      key: 'jrt7eykb5odmd98',
+      secret: 'ayrxakqedjss46f',
+      token: 'FgXq-pbmMH4AAAAAAAABfcc2ZhVM9cQDGgIEHBc-Yz7a1403SpYZXBjqzIfVUAJ5'
     };
 
     var dropboxClient = new Dropbox.Client(dropboxClientCredentials);
