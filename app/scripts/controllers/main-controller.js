@@ -13,68 +13,64 @@ define(['./module','angular'],
 
     dropboxAuth.connectDropbox()
     .then(
-        function(result){
-           var im = new IM(result);
-           im.constructItemMirror()
-           .then(function() { return im.getAssociationGUIDs(); })
-           .then(function() { return im.getAssociationNames(); })
-           .then(function(result){
-                //Bind results to scope
-                console.log(result);
-               $scope.associations = result;
+      function(result){
+       var im = new IM(result);
+       im.constructItemMirror()
+         .then(function() { return im.getAssociationGUIDs(); })
+         .then(function() { return im.getAssociationNames(); })
+         .then(function(result){
 
-               $scope.list = [];
-          
-               for(var i=0; i < result.length; i++) {
-                  var item={};
-                  item.id = i;
-                  item.title = result[i];
-                  item.items = [];
-                  $scope.list.push(item);
-               }
+          $scope.associations = result;
+          $scope.list = result;
 
-               console.log($scope.list);
+          $scope.status = 'success';
+          $scope.loaded = true;
+          $scope.GUIDs = im.GUIDs;
 
 
-              $scope.selectedItem = {};
+          $scope.selectedItem = {};
 
-              $scope.options = {
-              };
+          $scope.options = {
+          };
 
-              $scope.remove = function(scope) {
-                scope.remove();
-              };
+          $scope.remove = function(scope) {
+            scope.remove();
+            var nodeData = scope.$modelValue;
+            im.deleteAssociation(nodeData.guid)
+              .then(function(result) { console.log(result) }, function(reason) { console.log('Failed: ' + reason); });
+          };
 
-              $scope.toggle = function(scope) {
-                scope.toggle();
-              };
+          $scope.toggle = function(scope) {
+            scope.toggle();
+          };
 
-              // Trying to toggle drag. Not working yet.
-              $scope.dragEnabled = function(scope) {
-                console.log(scope);
-                console.log(scope.$parent);
-                scope.$parent.dragEnabled();
-              };
+          // Trying to toggle drag. Not working yet.
+          $scope.dragEnabled = function(scope) {
+            console.log(scope);
+            console.log(scope.$parent);
+            scope.$parent.dragEnabled();
+          };
 
-              $scope.newSubItem = function(scope) {
-                var nodeData = scope.$modelValue;
-                nodeData.items.push({
-                  id: nodeData.id * 10 + nodeData.items.length,
-                  title: nodeData.title + '.' + (nodeData.items.length + 1),
-                  items: []
-                });
-              };
+          $scope.newSubItem = function(scope) {
+            var nodeData = scope.$modelValue;
+            console.log(nodeData);
+            var newTitle = nodeData.title + ' Subitem';
+            nodeData.items.push({
+              guid: nodeData.id * 10 + nodeData.items.length,
+              title: newTitle,
+              items: []
+            });
+            console.log(newTitle);
+            im.createAssociation(newTitle)
+              .then(function(result) { console.log(result) }, function(reason) { console.log('Failed: ' + reason); });
+          };
 
-               $scope.status = 'success';
-               $scope.loaded = true;
-               $scope.GUIDs = im.GUIDs;
-              }, function(reason) {
-               //Catch errors in the chain
-               console.log('Failed: ' + reason);
-             })
-        }
-    )
+        }, function(reason) {
+         //Catch errors in the chain
+         console.log('Failed: ' + reason);
+       })
+      }
+    );
   }]);
-
 });
 
