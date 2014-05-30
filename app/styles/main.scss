@@ -6,90 +6,162 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
-.browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
+@import url(http://fonts.googleapis.com/css?family=Fredoka+One|Changa+One|Nobile:400,400italic,700,700italic|Righteous|Comfortaa:400,300,700|Bevan);
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300);
+
+
+//Color codes
+$bgDefault      : #e74c3c;
+$bgHighlight    : #c0392b;
+$colDefault     : #ffffff;
+$colHover       : #dddddd;
+
+html,body {
+    height: 100%;
+    margin: 0;
+    padding-top: 0;
 }
 
-/* Space out content a bit */
-body {
-    padding-top: 20px;
-    padding-bottom: 20px;
+.navbar {
+    margin-bottom: 0px;
+    border: 0;
+}
+.fullheight {
+    position: relative;
+    height: 100%;
+}
+//From JS Fiddle
+.navbar-default {
+    background-color: $bgDefault;
+    .navbar-brand {
+        font-family:Righteous;
+        font-size: 40px;
+        margin: 20px;
+        color: $colDefault;
+        &:hover, &:focus {
+            color: $colHover; }}
+    .navbar-nav {
+        > li {
+            > a {
+                color: $colDefault;
+                &:hover, &:focus {
+                    color: $colHover;   }}}
+        .active {
+            > a, > a:hover, > a:focus {
+                color: $colHover;
+                background-color: $bgHighlight; }}
+        .open {
+            > a, > a:hover, > a:focus {
+                color: $colHover;
+                background-color: $bgHighlight;
+                .caret {
+                    border-top-color: $colHover;
+                    border-bottom-color: $colHover; }}}
+        > .dropdown {
+            > a {
+                .caret {
+                    border-top-color: $colDefault;
+                    border-bottom-color: $colDefault; }
+                &:hover, &:focus {
+                    .caret {
+                        border-top-color: $colHover;
+                        border-bottom-color: $colHover; }}}}}
+    .navbar-toggle {
+        border-color: $bgHighlight;
+        &:hover, &:focus {
+            background-color: $bgHighlight; }
+        .icon-bar {
+            background-color: $colDefault; }}}
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: $colDefault;
+        &:hover, &:focus {
+            color: $colHover;
+            background-color: $bgHighlight; }}
 }
 
-/* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
-    padding-left: 15px;
-    padding-right: 15px;
+.clear {
+    clear:both;
+    line-height:0;
 }
 
-/* Custom page header */
-.header {
-    border-bottom: 1px solid #e5e5e5;
+button.add-note {
+    font-size:15px;
+    font-color:grey;
+    margin-top:10px;
+    margin-left:10px;
 }
 
-/* Make the masthead heading the same height as the navigation */
-.header h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    padding-bottom: 19px;
+button.trash-note {
+    font-size:15px;
+    margin-top:10px;
+    margin-left:10px;
+    float: right;
 }
 
-/* Custom page footer */
-.footer {
-    padding-top: 19px;
-    color: #777;
-    border-top: 1px solid #e5e5e5;
+.navbar-default {
+    background-color:#335CD6
 }
 
-.container-narrow > hr {
-    margin: 30px 0;
+span.buttons {
+    font-size:50px;
+    color: rgb(255,255,255);
 }
 
-/* Main marketing message and sign up button */
-.jumbotron {
+div.cog {
+    border: 2px solid;
     text-align: center;
-    border-bottom: 1px solid #e5e5e5;
+    padding: 10px;
+    margin: 10px;
 }
 
-.jumbotron .btn {
-    font-size: 21px;
-    padding: 14px 24px;
+div.logout {
+    border: 2px solid;
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+}
+li.inEditMode {
+    font-weight: bold;
 }
 
-/* Supporting marketing content */
-.marketing {
-    margin: 40px 0;
+.left-pane{
+    height: 100%;
+    //border: 3px solid;
+    //border-color: rgb(180,180,180);
+    //border-radius: 5px;
 }
 
-.marketing p + h4 {
-    margin-top: 28px;
+div.right-pane{
+    height: 100%;
+    background-color: rgb(180,180,180);
+    height: 100%;
 }
 
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-    .container {
-        max-width: 730px;
-    }
-
-    /* Remove the padding we set earlier */
-    .header,
-    .marketing,
-    .footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-    /* Space out the masthead */
-    .header {
-        margin-bottom: 30px;
-    }
-    /* Remove the bottom border on the jumbotron for visual effect */
-    .jumbotron {
-        border-bottom: 0;
-    }
+.note {
+    width: auto;
+    padding: 20px;
+    margin: 10px;
+    background-color: white;  
+    border: 3px solid;
+    border-color: rgb(180,180,180);
+    border-raduis: 5px; 
 }
+
+li{ 
+    color: rgb(100,100,100);
+    font-family: "Open Sans";
+    font-size: 25px;
+    margin-top: 5pt;
+    margin-bottom: 5pt;
+}
+
+li.hover{
+    color: black;
+}
+
+
+//.container-narrow > hr {
+//    margin: 30px 0;
+//}
