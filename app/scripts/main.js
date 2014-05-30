@@ -7,12 +7,14 @@ require.config({
     'Hallo': '../bower_components/hallo.js/hallo.min',
     'angular': '../bower_components/angular/angular',
     'angular-route': '../bower_components/angular-route/angular-route',
+    'angular-ui-tree': '../bower_components/angular-ui-tree/dist/angular-ui-tree',
     'Dropbox': '//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min',
     'ItemMirror': 'http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min'
   },
   shim: {
     'angular' : {'exports' : 'angular'},
     'angular-route': ['angular'],
+    'angular-ui-tree': ['angular'],
     'jQuery': {'exports' : 'jQuery'},
     'Rangy' : {'exports' : 'rangy'},
     'Dropbox' : {'exports': 'Dropbox'},
@@ -23,7 +25,7 @@ require.config({
 });
 
 // Initialize the app
-require(['jQuery', 'angular', 'angular-route', 'Dropbox', 'ItemMirror', 'Hallo', 'app', 'routes'],
+require(['jQuery', 'angular', 'angular-route', 'angular-ui-tree', 'Dropbox', 'ItemMirror', 'Hallo', 'app', 'routes'],
   function ($, angular, Dropbox, ItemMirror, Hallo, app, routes) {
     'use strict';   
 

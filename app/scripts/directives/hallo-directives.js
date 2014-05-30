@@ -9,7 +9,7 @@ define(['./module','angular'], function (directives,angular) {
 
   directives.directive('hallo', function() {
       return {
-          restrict: 'A',
+          restrict: 'E',
           require: '?ngModel',
           link: function(scope, element, attrs, ngModel) {
               if (!ngModel) {
