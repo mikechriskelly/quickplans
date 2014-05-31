@@ -1,0 +1,34 @@
+
+  <div class="row fullheight">
+      <!--Container for the navigation structure-->
+      <!--div class="left-pane"--> 
+        <div class="col-md-6">
+        <ul class="list-item pop">
+          <li hallo ng-model="item" ng-repeat="item in associations" ng-keydown="$event">{{ item }}</li>
+        </ul>
+        </div>
+      <!--/div-->
+
+      <!--Container for the right pane-->
+      <!--div class="right-pane"-->
+        <div class="col-md-6 right-pane">
+        <!--a href="#"><span class="glyphicon glyphicon-plus"></span></a-->
+        <button type="button" class="btn btn-default btn-sm add-note">
+          <span class="glyphicon glyphicon-plus"></span> Add Note
+        </button>
+
+        <div hallo ng-model="item" class="note">
+          This div will act as the phantom association made for notes. The notes would have to be persisted for each folder and be made editable using Hallo.js
+          <button type="button" class="btn btn-default btn-sm trash-note">
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
+        </div>
+
+        <div hallo ng-model="item" class="note">
+          Another Div - This div will act as the phantom association made for notes. The notes would have to be persisted for each folder and be made editable using Hallo.js
+        </div>
+      </div>
+    <!--/div-->
+    </div>
+
+

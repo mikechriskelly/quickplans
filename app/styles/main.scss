@@ -6,17 +6,155 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
-.browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
+@import url(http://fonts.googleapis.com/css?family=Fredoka+One|Changa+One|Nobile:400,400italic,700,700italic|Righteous|Comfortaa:400,300,700|Bevan);
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300);
+
+
+//Color codes
+$bgDefault      : #e74c3c;
+$bgHighlight    : #c0392b;
+$colDefault     : #ffffff;
+$colHover       : #dddddd;
+
+html,body {
+    height: 100%;
+    margin: 0;
+    padding-top: 0;
 }
 
-/* Space out content a bit */
-body {
-    padding-top: 20px;
-    padding-bottom: 20px;
+.navbar {
+    margin-bottom: 0px;
+    border: 0;
+}
+.fullheight {
+    position: relative;
+    height: 100%;
+}
+//From JS Fiddle
+.navbar-default {
+    background-color: $bgDefault;
+    .navbar-brand {
+        font-family:Righteous;
+        font-size: 40px;
+        margin: 20px;
+        color: $colDefault;
+        &:hover, &:focus {
+            color: $colHover; }}
+    .navbar-nav {
+        > li {
+            > a {
+                color: $colDefault;
+                &:hover, &:focus {
+                    color: $colHover;   }}}
+        .active {
+            > a, > a:hover, > a:focus {
+                color: $colHover;
+                background-color: $bgHighlight; }}
+        .open {
+            > a, > a:hover, > a:focus {
+                color: $colHover;
+                background-color: $bgHighlight;
+                .caret {
+                    border-top-color: $colHover;
+                    border-bottom-color: $colHover; }}}
+        > .dropdown {
+            > a {
+                .caret {
+                    border-top-color: $colDefault;
+                    border-bottom-color: $colDefault; }
+                &:hover, &:focus {
+                    .caret {
+                        border-top-color: $colHover;
+                        border-bottom-color: $colHover; }}}}}
+    .navbar-toggle {
+        border-color: $bgHighlight;
+        &:hover, &:focus {
+            background-color: $bgHighlight; }
+        .icon-bar {
+            background-color: $colDefault; }}}
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: $colDefault;
+        &:hover, &:focus {
+            color: $colHover;
+            background-color: $bgHighlight; }}
+}
+
+.clear {
+    clear:both;
+    line-height:0;
+}
+
+button.add-note {
+    font-size:15px;
+    font-color:grey;
+    margin-top:10px;
+    margin-left:10px;
+}
+
+button.trash-note {
+    font-size:15px;
+    margin-top:10px;
+    margin-left:10px;
+    float: right;
+}
+
+.navbar-default {
+    background-color:#335CD6
+}
+
+span.buttons {
+    font-size:50px;
+    color: rgb(255,255,255);
+}
+
+div.cog {
+    border: 2px solid;
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+}
+
+div.logout {
+    border: 2px solid;
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+}
+li.inEditMode {
+    font-weight: bold;
+}
+
+.left-pane{
+    height: 100%;
+    //border: 3px solid;
+    //border-color: rgb(180,180,180);
+    //border-radius: 5px;
+}
+
+div.right-pane{
+    height: 100%;
+    background-color: rgb(180,180,180);
+    height: 100%;
+}
+
+.note {
+    width: auto;
+    padding: 20px;
+    margin: 10px;
+    background-color: white;  
+    border: 3px solid;
+    border-color: rgb(180,180,180);
+    border-raduis: 5px; 
+}
+
+li{ 
+    color: rgb(100,100,100);
+    font-family: "Open Sans";
+    font-size: 25px;
+    margin-top: 5pt;
+    margin-bottom: 5pt;
 }
 
 .listitem-text {
@@ -53,9 +191,7 @@ body {
     box-sizing: border-box;
 }
 
-
 .group-title {
     background-color: #687074 !important;
     color: #FFF !important;
 }
-
