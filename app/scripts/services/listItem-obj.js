@@ -3,13 +3,15 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
   	services.factory('LI', ['$q', function($q){
 
-  		function LI(parentIM, GUID){
+  		function LI(parentIM, parentLI, liPath, GUID, title){
 
-  			this.GUID = GUID || null;
+  			this.GUID = GUID;
 
-  			this.displayName = null;
-  			this.parent = parentIM || null;
-  			this.children = null;
+  			this.displayName = title;
+  			this.parentIM = parentIM;
+        this.parentLI = parentLI;
+        this.liPath = liPath;
+  			this.children = [];
 
   			this.isExpanded = false;
   			this.prev=null;

@@ -10,6 +10,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
     function IM(dropboxClient) {
       this.dropboxClient = dropboxClient;
+      this.associatedItemMirrors = [];
+      this.associations=[];
       this.dropboxXooMLUtility = {
         driverURI: 'DropboxXooMLUtility',
         dropboxClient: this.dropboxClient
@@ -65,7 +67,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         new ItemMirror(this.itemMirrorOptions[3], function (error, itemMirror) {
           // Save itemMirror object into factory object for reuse
           self.itemMirror = itemMirror;
-          console.log(itemMirror);
+          //console.log(itemMirror);
           if (error) { deferred.reject(error); } 
           deferred.resolve(itemMirror);  
         });
@@ -77,7 +79,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var deferred = $q.defer();
         this.itemMirror.createItemMirrorForAssociatedGroupingItem(GUID, function(error, itemMirror) {
           // Save itemMirror object into factory object for reuse
-          self.itemMirror = itemMirror;
+          // self.itemMirror = itemMirror;
+          self.associatedItemMirrors.push(itemMirror);
           if (error) { deferred.reject(error); }
           deferred.resolve(itemMirror);
         });
@@ -132,6 +135,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var deferred = $q.defer();
         this.itemMirror.getDisplayName(function(error, displayName) {
           if (error) { deferred.reject(error); }
+          self.displayName = displayName;
           deferred.resolve(displayName);
         });
         return deferred.promise;
@@ -159,9 +163,10 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
             if (error) { deferred.reject(error); }
             var association = {
               guid : GUID,
-              title : displayText,
-              items : []
+              title : displayText
+              //items : []
             };
+            self.associations.push(association);
             deferred.resolve(association);
           });
           return deferred.promise;
