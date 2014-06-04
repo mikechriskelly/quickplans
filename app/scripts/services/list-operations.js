@@ -15,43 +15,38 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       listItems = new LI('root','root');
 
       // Create the IM for root and call the recursive helper function to build the whole list
-      var deferred = $q.defer();
       var im = new IM(client);
+
       im.constructItemMirror()
       .then(function(rootIM) { return buildTreeRecursive(rootIM, listItems); })
       .then(function(finishedList) { 
         console.log('Finished List');
-        console.log(finishedList);
-        deferred.resolve(finishedList);
-      }, function(error) {
-        console.log('Error');
-        console.log(error);
+        console.log(listItems);
+        var deferred = $q.defer();
+        deferred.resolve(listItems);
+        return deferred.promise;
       });
-
-      return deferred.promise;
     }
 
-    function buildTreeRecursive(imObj,liObj){
+    function buildTreeRecursive(imObj,liObj) {
       console.log('Called buildTreeRecursive');
-      // console.log(imObj);
-      // console.log(liObj);
-      var deferred = $q.defer();
 
-      imObj.getAssociationGUIDs()
-      .then(function(GUIDs) { return imObj.getGroupingItems(GUIDs); })
-      .then(function(GUIDs) { return imObj.createIMsForGroupingItems(GUIDs); })
-      //.then(function(GUIDs) { return imObj.getAssociationNames(GUIDs); })
-      .then(function(assoc) { 
-        console.log(assoc);
-        for(var i=0; i<assoc.length; i++) {
-          var newListItem = new LI(assoc[i].GUID, 'Untitled', imObj);
-          liObj.items.push(newListItem);
-          buildTreeRecursive(assoc[i], newListItem);
-        }
-        deferred.resolve(listItems);
-      });
+      return imObj.getAssociationGUIDs()
+        .then(function(GUIDs) { return imObj.getGroupingItems(GUIDs); })
+        .then(function(GUIDs) { return imObj.createIMsForGroupingItems(GUIDs); })
+        //.then(function(GUIDs) { return imObj.getAssociationNames(GUIDs); })
+        .then(function(associations) { 
+          return $q.all(associations.map(function(assoc) {
+            
+            // Create an LI and insert it inside the liObj
+            var newListItem = new LI(assoc.GUID, 'Untitled', imObj);
+            liObj.items.push(newListItem);
 
-      return deferred.promise;
+            // Recursive call with new IM and LI objects
+            // TODO: if isExpanded else return null 
+            return buildTreeRecursive(assoc, newListItem);
+          }));
+        });
     }
 
 

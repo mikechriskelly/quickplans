@@ -13,10 +13,10 @@ define(['./module','angular'],
 
     // New approach
     dropboxAuth.connectDropbox()
-    .then(function(result) { return listOp.buildList(result);})
+    .then(function(result) { return listOp.buildList(result); })
     .then(function(result) {
       // Bind the full listed object to scope for the UI tree
-      //$scope.list = result;
+      $scope.list = result;
     });
   }]);
 });
