@@ -48,7 +48,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         });
     }
 
-
     function orderView() {
       //takes in created listElements
     };
