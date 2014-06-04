@@ -92,10 +92,10 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
 
       // Return an array of itemMirror objects from an array of GUIDs
-      createIMsForGroupingItems : function() {
+      createIMsForGroupingItems : function(GUIDs) {
         var self = this;
         // Map the GUIDs into an array of promises
-        var promises = this.associationGUIDs.map(function(GUID) {
+        var promises = GUIDs.map(function(GUID) {
           var deferred = $q.defer();
           self.itemMirror.createItemMirrorForAssociatedGroupingItem(GUID, function(error, itemMirror) {
             if (error) { deferred.reject(error); }
@@ -178,6 +178,25 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
             if (error) { deferred.reject(error); }
             self.associations.push(displayText);
             deferred.resolve(displayText);
+          });
+          return deferred.promise;
+        });
+        return $q.all(promises);
+      },
+
+      // Gets display names of a GUID array
+      makeAssociationObjects : function(GUIDs) {
+        var self = this;
+        var promises = GUIDs.map(function(GUID) {
+          var deferred  = $q.defer();
+          self.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
+            if (error) { deferred.reject(error); }
+
+            var item;
+            item.GUID = GUID;
+            item.title = displayText;
+
+            deferred.resolve(item);
           });
           return deferred.promise;
         });
