@@ -1,15 +1,11 @@
 define(['./module','angular','ItemMirror'], function (services,angular,ItemMirror) {
   'use strict';
 
-  // Check if dependencies are in scope
-  // console.log('jquery: ' + typeof($));
-  // console.log('ItemMirror: ' + typeof(ItemMirror));
-  // console.log('Dropbox: ' + typeof(Dropbox));
-
   services.factory('IM', ['$q',function($q){
 
     function IM(dropboxClient) {
       this.dropboxClient = dropboxClient;
+
       this.dropboxXooMLUtility = {
         driverURI: 'DropboxXooMLUtility',
         dropboxClient: this.dropboxClient
@@ -54,8 +50,12 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
     IM.prototype = {
 
       // Object Properties
-      associationGUIDs : [],
       itemMirror : null,
+      GUID: null,
+
+      associations : [],          // object array with title and guid as properties
+      associationGUIDs : [],      // string array of GUIDs
+
       namespaceURI : '', // URI for this webapp
 
       // Use to create first ItemMirror from root or initial folder
@@ -63,32 +63,53 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var self = this;
         var deferred = $q.defer();
         new ItemMirror(this.itemMirrorOptions[3], function (error, itemMirror) {
+          if (error) { deferred.reject(error); }
           // Save itemMirror object into factory object for reuse
           self.itemMirror = itemMirror;
-          console.log(itemMirror);
-          if (error) { deferred.reject(error); } 
-          deferred.resolve(itemMirror);  
+          // It's not useful to return an itemMirror, so return IM (self)
+          deferred.resolve(self);  
         });
         return deferred.promise;
       },
 
-      // Use to create itemMirror object based on a specific GUID
+      // Create an itemMirror object based on a specific GUID
       createItemMirrorForAssociatedGroupingItem : function(GUID) {
+        var self = this;
         var deferred = $q.defer();
         this.itemMirror.createItemMirrorForAssociatedGroupingItem(GUID, function(error, itemMirror) {
-          // Save itemMirror object into factory object for reuse
-          self.itemMirror = itemMirror;
           if (error) { deferred.reject(error); }
+          // Create a new IM object and assign the itemMirror object to it. Return the complete IM object.
+          var imObj = new IM(self.dropboxClient);
+          imObj.itemMirror = itemMirror;
           deferred.resolve(itemMirror);
         });
       },
 
+      // Return an array of itemMirror objects from an array of GUIDs
+      createIMsForGroupingItems : function(GUIDs) {
+        var self = this;
+        // Map the GUIDs into an array of promises
+        var promises = GUIDs.map(function(GUID) {
+          var deferred = $q.defer();
+          self.itemMirror.createItemMirrorForAssociatedGroupingItem(GUID, function(error, itemMirror) {
+            if (error) { deferred.reject(error); }
+
+            // Create a new IM object and assign the itemMirror object to it. Return the complete IM object.
+            var imObj = new IM(self.dropboxClient);
+            imObj.itemMirror = itemMirror;
+            imObj.GUID = GUID;
+            deferred.resolve(imObj);
+          });
+          return deferred.promise;
+        });
+        return $q.all(promises);
+      },
+
       // Adds the given attributeName to the association with the given GUID and namespaceURI.
       // Use this to add prev, next, isExpanded attributes to new objects
-      //
       addAssociationNamespaceAttribute : function(attributeName, GUID) {
         var deferred = $q.defer();
-        this.itemMirror.addAssociationNamespaceAttribute(attributeName, GUID, namespaceURI, function(error) {
+        this.itemMirror.addAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error) {
           if (error) { deferred.reject(error); }
           deferred.resolve();
         });
@@ -110,10 +131,10 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         };
 
         this.itemMirror.createAssociation(options, function(error, GUID) {
+          if (error) { deferred.reject(error); }
           // Store new association in the local array of GUIDs
           self.associationGUIDs.push(GUID);
           console.log(self.associationGUIDs);
-          if (error) { deferred.reject(error); }
           deferred.resolve(GUID);  
         });
         return deferred.promise;
@@ -127,42 +148,49 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         });
       },
 
-      // Gets the name of the itemMirror object
-      getDisplayName : function() {
-        var deferred = $q.defer();
-        this.itemMirror.getDisplayName(function(error, displayName) {
-          if (error) { deferred.reject(error); }
-          deferred.resolve(displayName);
-        });
-        return deferred.promise;
-      },
-
       // Gets array of GUIDs
       getAssociationGUIDs : function() {
         var self = this;
         var deferred = $q.defer();
         this.itemMirror.listAssociations(function (error, GUIDs) {
+          if (error) { deferred.reject(error); }
           // Save GUIDs into factory object for reuse
           self.associationGUIDs = GUIDs;
-          if (error) { deferred.reject(error); }
           deferred.resolve(GUIDs);
         });
         return deferred.promise;
       },
 
       // Gets display names of a GUID array
-      getAssociationNames : function() {
+      getAssociationNames : function(GUIDs) {
         var self = this;
-        var promises = this.associationGUIDs.map(function(GUID) {
+        // If GUIDs is not provided as a param, check for locally stored GUIDs
+        GUIDs = GUIDs || this.associationGUIDs;
+        var promises = GUIDs.map(function(GUID) {
           var deferred  = $q.defer();
           self.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
             if (error) { deferred.reject(error); }
-            var association = {
-              guid : GUID,
-              title : displayText,
-              items : []
-            };
-            deferred.resolve(association);
+            self.associations.push(displayText);
+            deferred.resolve(displayText);
+          });
+          return deferred.promise;
+        });
+        return $q.all(promises);
+      },
+
+      // Gets display names of a GUID array
+      makeAssociationObjects : function(GUIDs) {
+        var self = this;
+        var promises = GUIDs.map(function(GUID) {
+          var deferred  = $q.defer();
+          self.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
+            if (error) { deferred.reject(error); }
+
+            var item;
+            item.GUID = GUID;
+            item.title = displayText;
+
+            deferred.resolve(item);
           });
           return deferred.promise;
         });
@@ -170,17 +198,44 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
 
       getAssociationNamespaceAttribute : function(attributeName, GUID) {
-        var self = this;
         var deferred = $q.defer();
-        this.itemMirror.getAssociationNamespaceAttribute(attributeName, GUID, namespaceURI, function(error, associationNamespaceAttribute) {
+        this.itemMirror.getAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error, associationNamespaceAttribute) {
           if (error) { deferred.reject(error); }
           deferred.resolve(associationNamespaceAttribute);
         });
         return deferred.promise;
       },
 
-      isAssociatedItemGrouping : function(GUID) {
+      // Gets the name of the itemMirror object
+      getDisplayName : function() {
         var self = this;
+        var deferred = $q.defer();
+        this.itemMirror.getDisplayName(function(error, displayName) {
+          if (error) { deferred.reject(error); }
+          self.displayName = displayName;
+          // Return the whole IM object so this method can be used in chaining
+          deferred.resolve(self);
+        });
+        return deferred.promise;
+      },
+
+      // Takes an array of GUIDS and removes non-grouping items from the array
+      getGroupingItems : function() {
+        var self = this;
+        // Map the GUIDs into an array of promises
+        var promises = this.associationGUIDs.map(function(GUID) {
+          var deferred  = $q.defer();
+          self.itemMirror.isAssociatedItemGrouping(GUID, function(error, isGroupingItem) {
+            if (error) { deferred.reject(error); }
+            // Filter so only grouping items are returned
+            if(isGroupingItem) { deferred.resolve(GUID); }
+          });
+          return deferred.promise;
+        });
+        return $q.all(promises);
+      },
+
+      isAssociatedItemGrouping : function(GUID) {
         var deferred = $q.defer();
         this.itemMirror.isAssociatedItemGrouping(GUID, function(error, isGroupingItem) {
           if (error) { deferred.reject(error); }
@@ -190,9 +245,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
 
       listAssociationNamespaceAttributes : function(GUID) {
-        var self = this;
         var deferred = $q.defer();
-        this.itemMirror.listAssociationNamespaceAttributes(GUID, namespaceURI, function(error, array) {
+        this.itemMirror.listAssociationNamespaceAttributes(GUID, this.namespaceURI, function(error, array) {
           if (error) { deferred.reject(error); }
           deferred.resolve(array);
         });
@@ -200,7 +254,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
 
       moveAssociation : function(GUID, destinationItemMirror) {
-        var self = this;
         var deferred = $q.defer();
         this.itemMirror.moveAssociation(GUID, destinationItemMirror, function(error) {
           if (error) { deferred.reject(error); }
@@ -211,7 +264,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       
       // Not yet implemented in the itemMirror library
       renameLocalItem : function(GUID) {
-        var self = this;
         var deferred = $q.defer();
         this.itemMirror.renameLocalItem(GUID, function(error) {
           if (error) { deferred.reject(error); }
@@ -221,7 +273,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
 
       setAssociationDisplayText : function(GUID, displayText) {
-        var self = this;
         var deferred = $q.defer();
         this.itemMirror.setAssociationDisplayText(GUID, displayText, function(error) {
           if (error) { deferred.reject(error); }
@@ -231,9 +282,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
 
       setFragmentNamespaceAttribute : function(attributeName, attributeValue, GUID) {
-        var self = this;
         var deferred = $q.defer();
-        this.itemMirror.setFragmentNamespaceAttribute(attributeName, attributeValue, GUID, namespaceURI, function(error) {
+        this.itemMirror.setFragmentNamespaceAttribute(attributeName, attributeValue, GUID, this.namespaceURI, function(error) {
           if (error) { deferred.reject(error); }
           deferred.resolve();
         });
@@ -242,5 +292,5 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
     };
     return IM;
-  }])
+  }]);
 });

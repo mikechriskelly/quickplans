@@ -1,63 +1,65 @@
-define(['./module','angular','ItemMirror'], function (services,angular,ItemMirror) {
-	
-	'use strict';
-  	services.factory('listView', ['$q', function($q){
+define(['./module','angular','ItemMirror'], function (services,angular,ItemMirror) {  
+  'use strict';
+  
+  services.factory('listOp', ['$q','LI','IM', function($q, LI, IM){
 
-  		function listView(dropboxClient){
-  			this.dropboxClient = dropboxClient;
-  			this.itemMirrorList = {};
-  			this.listItems = {};
-  		}
+    // Private variables
+    var client;
+    var listItems;
 
+    function buildList(dropboxClient) {
+      client = dropboxClient;
 
-  		listView.prototype = {
+      // Create the ListItem for Root (GUID, title [, parentIM])
+      // All other list items will be nested in this one
+      listItems = new LI('root','root');
 
-  			'initializeView' : function(dropboxClient){
-  				var self = this;
-  				var deferred = $q.defer();
-  				createItemMirror(pass in dropboxClient)
-  				populate all object properties
-  				add it to itemMirror array/list
+      // Create the IM for root and call the recursive helper function to build the whole list
+      var deferred = $q.defer();
+      var im = new IM(client);
+      im.constructItemMirror()
+      .then(function(rootIM) { return buildTreeRecursive(rootIM, listItems); })
+      .then(function(finishedList) { 
+        console.log('Finished Building List');
+        deferred.resolve(listItems);
+      });
 
-  				defer.promise(itemMirror object)
-  				return deferred.promise;
-  			},
+      return deferred.promise;
+    }
 
-  			'populateView' : function(itemMirrorObj){
-  				if object.listGUIDs is not null
-  					then iterate through listGUIDs
-  						if association is a groupingItem:
-  							create a listItem(object as parentIM and GUID)
-  							add it to the listitem array
+    function buildTreeRecursive(imObj,liObj) {
+      console.log('Called buildTreeRecursive');
+      return imObj.getAssociationGUIDs()
+        .then(function(GUIDs) { return imObj.getGroupingItems(GUIDs); })
+        .then(function(GUIDs) { return imObj.createIMsForGroupingItems(GUIDs); })
+        .then(function(associations) { 
+          // Retrieves all display names and sets them as local property for each IM object
+          return $q.all(associations.map(function(assoc) { 
+            return assoc.getDisplayName();
+          })); 
+        })
+        .then(function(associations) { 
+          return $q.all(associations.map(function(assoc) {
+            // Create an LI and insert it inside the liObj
+            var newListItem = new LI(assoc.GUID, assoc.displayName, imObj);
+            liObj.items.push(newListItem);
+            // Recursive call with new IM and LI objects
+            // TODO: if isExpanded else return null 
+            return buildTreeRecursive(assoc, newListItem);
+          }));
+        });
+    }
 
-  							if association is expanded 
-  								use the parameter object to create an item mirror with the GUID
-									populate the item mirror object using various methods
-									add it to itemMirror array
+    function orderView() {
+      //takes in created listElements
+    };
 
-								if parent is root:
-									push the listitem element into listitem array
-								else:
-									find the parent item from the listitem array
-										then push the list item as the child property of the parent element
+    //return the object, if this class should be written as 
+    return {
+      'buildList' : buildList
+    };
 
-								populateView(pass the new itemmirrror created);
-
-							promises.push(deferred.resolve(listItem));
-
-					return $q.all(promises);
-  			},
-
-  			'orderView' : function(){
-  				//takes in created listElements
-
-  			}
-  		};
-
-  		//return the object, if this class should be written as 
-  		return listView;
-
-  	}])
+  }]);
 
 
  });
