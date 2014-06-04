@@ -3,16 +3,17 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
   	services.factory('LI', ['$q', function($q){
 
-  		function LI(parentIM, parentLI, liPath, GUID, title){
+  		function LI(GUID, title, parentIM){
 
-  			this.GUID = GUID;
+        // Must set parent IM object in order to perform methods
+        this.parentIM = parentIM || null;
 
-  			this.displayName = title;
-  			this.parentIM = parentIM;
-        this.parentLI = parentLI;
-        this.liPath = liPath;
-  			this.children = [];
+        // Essential properties for UI tree
+  			this.guid = GUID;
+  			this.title = title;
+  			this.items = [];
 
+        // Association properties from XooML
   			this.isExpanded = false;
   			this.prev=null;
   			this.next=null;
