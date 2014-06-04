@@ -15,17 +15,16 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       listItems = new LI('root','root');
 
       // Create the IM for root and call the recursive helper function to build the whole list
+      var deferred = $q.defer();
       var im = new IM(client);
-
       im.constructItemMirror()
       .then(function(rootIM) { return buildTreeRecursive(rootIM, listItems); })
       .then(function(finishedList) { 
-        console.log('Finished List');
-        console.log(listItems);
-        var deferred = $q.defer();
+        console.log('Finished Building List');
         deferred.resolve(listItems);
-        return deferred.promise;
       });
+
+      return deferred.promise;
     }
 
     function buildTreeRecursive(imObj,liObj) {

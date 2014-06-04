@@ -58,9 +58,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       itemMirror : null,
       GUID: null,
 
-      // associatedItemMirrors: [],  // itemMirror objects for associated grouping items
       associations : [],          // object array with title and guid as properties
-      associationGUIDs : [],       // string array of GUIDs
+      associationGUIDs : [],      // string array of GUIDs
 
       namespaceURI : '', // URI for this webapp
 
