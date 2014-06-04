@@ -29,18 +29,20 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
     function buildTreeRecursive(imObj,liObj) {
       console.log('Called buildTreeRecursive');
-
       return imObj.getAssociationGUIDs()
         .then(function(GUIDs) { return imObj.getGroupingItems(GUIDs); })
         .then(function(GUIDs) { return imObj.createIMsForGroupingItems(GUIDs); })
-        //.then(function(GUIDs) { return imObj.getAssociationNames(GUIDs); })
+        .then(function(associations) { 
+          // Retrieves all display names and sets them as local property for each IM object
+          return $q.all(associations.map(function(assoc) { 
+            return assoc.getDisplayName();
+          })); 
+        })
         .then(function(associations) { 
           return $q.all(associations.map(function(assoc) {
-            
             // Create an LI and insert it inside the liObj
-            var newListItem = new LI(assoc.GUID, 'Untitled', imObj);
+            var newListItem = new LI(assoc.GUID, assoc.displayName, imObj);
             liObj.items.push(newListItem);
-
             // Recursive call with new IM and LI objects
             // TODO: if isExpanded else return null 
             return buildTreeRecursive(assoc, newListItem);

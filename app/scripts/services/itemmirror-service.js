@@ -1,11 +1,6 @@
 define(['./module','angular','ItemMirror'], function (services,angular,ItemMirror) {
   'use strict';
 
-  // Check if dependencies are in scope
-  // console.log('jquery: ' + typeof($));
-  // console.log('ItemMirror: ' + typeof(ItemMirror));
-  // console.log('Dropbox: ' + typeof(Dropbox));
-
   services.factory('IM', ['$q',function($q){
 
     function IM(dropboxClient) {
@@ -218,7 +213,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         this.itemMirror.getDisplayName(function(error, displayName) {
           if (error) { deferred.reject(error); }
           self.displayName = displayName;
-          deferred.resolve(displayName);
+          // Return the whole IM object so this method can be used in chaining
+          deferred.resolve(self);
         });
         return deferred.promise;
       },
