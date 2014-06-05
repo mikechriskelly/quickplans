@@ -13,9 +13,9 @@
           <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
         </a>
         <hallo ng-model="item.title" class="listitem-text">{{item.title}}</hallo>
-        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="delete(this)"><span class="glyphicon glyphicon-remove"></span></a>
         <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
-        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="dragEnabled(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-move"></span></a>
+        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="move(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-move"></span></a>
       </div>
       <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
         <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer.html'">
@@ -39,7 +39,7 @@
           <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
         </a>
         <hallo ng-model="item.title" class="listitem-text">{{item.title}}</hallo>
-        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="delete(this)"><span class="glyphicon glyphicon-remove"></span></a>
         <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
       </div>
       <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">

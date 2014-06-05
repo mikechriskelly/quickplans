@@ -52,11 +52,13 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       // Object Properties
       itemMirror : null,
       GUID: null,
+      displayName: null,
+      priority : 0, // object of association attributes to be assigned to LI
 
       associations : [],          // object array with title and guid as properties
       associationGUIDs : [],      // string array of GUIDs
 
-      namespaceURI : '', // URI for this webapp
+      namespaceURI : 'quickplans', // URI for this webapp
 
       // Use to create first ItemMirror from root or initial folder
       constructItemMirror : function() {
@@ -197,11 +199,16 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         return $q.all(promises);
       },
 
-      getAssociationNamespaceAttribute : function(attributeName, GUID) {
+      getAssociationNamespaceAttribute : function(attributeName, assocIM) {
+        var self = this;
         var deferred = $q.defer();
+        var GUID = assocIM.guid;
         this.itemMirror.getAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error, associationNamespaceAttribute) {
           if (error) { deferred.reject(error); }
-          deferred.resolve(associationNamespaceAttribute);
+          console.log(assocIM.priority);
+          console.log(associationNamespaceAttribute);
+          assocIM[attributeName] = associationNamespaceAttribute || 0;
+          deferred.resolve(self);
         });
         return deferred.promise;
       },
@@ -255,6 +262,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
       moveAssociation : function(GUID, destinationItemMirror) {
         var deferred = $q.defer();
+        console.log(this.itemMirror);
         this.itemMirror.moveAssociation(GUID, destinationItemMirror, function(error) {
           if (error) { deferred.reject(error); }
           deferred.resolve();

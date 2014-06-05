@@ -36,12 +36,20 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           // Retrieves all display names and sets them as local property for each IM object
           return $q.all(associations.map(function(assoc) { 
             return assoc.getDisplayName();
-          })); 
+          }));
+        })
+        .then(function(associations) { 
+          // Retrieves all display names and sets them as local property for each IM object
+          return $q.all(associations.map(function(assoc) { 
+            return assoc.getAssociationNamespaceAttribute('priority', assoc);
+          }));
         })
         .then(function(associations) { 
           return $q.all(associations.map(function(assoc) {
             // Create an LI and insert it inside the liObj
             var newListItem = new LI(assoc.GUID, assoc.displayName, imObj);
+            console.log(assoc);
+            newListItem.priority = assoc.priority;
             liObj.items.push(newListItem);
             // Recursive call with new IM and LI objects
             // TODO: if isExpanded else return null 
