@@ -147,8 +147,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var deferred = $q.defer();
         this.itemMirror.deleteAssociation(GUID, function(error) {
           if (error) { deferred.reject(error); }
-          deferred.resolve();          
+          deferred.resolve('Item Deleted from folder');          
         });
+        return deferred.promise;
       },
 
       // Gets array of GUIDs
@@ -278,7 +279,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         console.log(this.itemMirror);
         this.itemMirror.moveAssociation(GUID, destinationItemMirror, function(error) {
           if (error) { deferred.reject(error); }
-          deferred.resolve();
+          deferred.resolve('Item moved to new folder');
         });
         return deferred.promise;   
       },
@@ -288,7 +289,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var deferred = $q.defer();
         this.itemMirror.renameLocalItem(GUID, function(error) {
           if (error) { deferred.reject(error); }
-          deferred.resolve();
+          deferred.resolve('Item renamed');
         });
         return deferred.promise; 
       },
@@ -297,7 +298,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var deferred = $q.defer();
         this.itemMirror.setAssociationDisplayText(GUID, displayText, function(error) {
           if (error) { deferred.reject(error); }
-          deferred.resolve();
+          deferred.resolve('Display text updated');
         });
         return deferred.promise; 
       },
@@ -306,7 +307,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var deferred = $q.defer();
         this.itemMirror.setFragmentNamespaceAttribute(attributeName, attributeValue, GUID, this.namespaceURI, function(error) {
           if (error) { deferred.reject(error); }
-          deferred.resolve();
+          deferred.resolve(attributeName + ' attribute assigned value ' + attributeValue);
         });
         return deferred.promise; 
       }

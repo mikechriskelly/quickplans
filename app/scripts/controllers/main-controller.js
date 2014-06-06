@@ -24,12 +24,12 @@ define(['./module','angular'],
     },
 
     $scope.delete = function(scope) {
-      console.log(scope);
-      scope.remove();
-      console.log(scope);
       var listItem = scope.$modelValue;
       console.log(listItem);
       listItem.deleteItem();
+      console.log(scope);
+      scope.remove();
+      console.log(scope);
     };
 
     $scope.toggle = function(scope) {
