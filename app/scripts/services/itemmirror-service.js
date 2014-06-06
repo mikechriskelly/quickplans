@@ -205,10 +205,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var GUID = assocIM.guid;
         this.itemMirror.getAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error, associationNamespaceAttribute) {
           if (error) { deferred.reject(error); }
-          console.log(assocIM.priority);
-          console.log(associationNamespaceAttribute);
+          console.log(assocIM[attributeName]);
           assocIM[attributeName] = associationNamespaceAttribute || 0;
-          deferred.resolve(self);
+          deferred.resolve(assocIM);
         });
         return deferred.promise;
       },
@@ -230,6 +229,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       getGroupingItems : function() {
         var self = this;
         // Map the GUIDs into an array of promises
+                console.log(this.associationGUIDs);
         var promises = this.associationGUIDs.map(function(GUID) {
           var deferred  = $q.defer();
           self.itemMirror.isAssociatedItemGrouping(GUID, function(error, isGroupingItem) {
@@ -239,6 +239,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           });
           return deferred.promise;
         });
+                console.log(promises);
         return $q.all(promises);
       },
 
