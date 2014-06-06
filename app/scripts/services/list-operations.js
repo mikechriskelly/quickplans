@@ -19,7 +19,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       var im = new IM(client);
       im.constructItemMirror()
       .then(function(rootIM) { return buildTreeRecursive(rootIM, listItems); })
-      .then(function(finishedList) { 
+      .then(function() { 
         console.log('Finished Building List');
         deferred.resolve(listItems);
       });

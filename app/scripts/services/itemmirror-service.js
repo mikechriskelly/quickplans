@@ -44,7 +44,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           readIfExists: true
         }
       };
-      //console.log(this);
     }
 
     IM.prototype = {
@@ -56,7 +55,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       priority : 0, // object of association attributes to be assigned to LI
 
       associations : [],          // object array with title and guid as properties
-      associationGUIDs : [],      // string array of GUIDs
+      associationGUIDs : [],      // string array of all GUIDs
+      phantomAssociations: [],    // string array of phantom assoc GUIDs only
 
       namespaceURI : 'quickplans', // URI for this webapp
 
@@ -90,6 +90,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       // Return an array of itemMirror objects from an array of GUIDs
       createIMsForGroupingItems : function(GUIDs) {
         var self = this;
+        GUIDs = GUIDs.filter(function(e) { return (e===undefined||e===null||e==='')? false : ~e; });
         // Map the GUIDs into an array of promises
         var promises = GUIDs.map(function(GUID) {
           var deferred = $q.defer();
@@ -205,7 +206,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var GUID = assocIM.guid;
         this.itemMirror.getAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error, associationNamespaceAttribute) {
           if (error) { deferred.reject(error); }
-          console.log(assocIM[attributeName]);
           assocIM[attributeName] = associationNamespaceAttribute || 0;
           deferred.resolve(assocIM);
         });
@@ -229,18 +229,30 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       getGroupingItems : function() {
         var self = this;
         // Map the GUIDs into an array of promises
-                console.log(this.associationGUIDs);
         var promises = this.associationGUIDs.map(function(GUID) {
           var deferred  = $q.defer();
           self.itemMirror.isAssociatedItemGrouping(GUID, function(error, isGroupingItem) {
-            if (error) { deferred.reject(error); }
-            // Filter so only grouping items are returned
-            if(isGroupingItem) { deferred.resolve(GUID); }
+            // Removed error handling: resolve errors with a null value
+            // Return GUID string only for grouping items
+            if(isGroupingItem) { 
+              deferred.resolve(GUID); 
+            } else {
+              // Store GUIDS for phantom assoc in local array so they can be used later
+              self.phantomAssociations.push(GUID);
+              // Return null value to be filtered out below
+              // It's necessary to return some value in order for q.all to succeed
+              deferred.resolve(null); 
+            }
           });
           return deferred.promise;
         });
-                console.log(promises);
-        return $q.all(promises);
+        // After promises are resolved, filter out null values and return resulting GUIDs
+        return $q.all(promises)
+        .then(function(result) { 
+          return result.filter(function(val) {
+            return (typeof val === 'string');
+          });
+        });
       },
 
       isAssociatedItemGrouping : function(GUID) {
