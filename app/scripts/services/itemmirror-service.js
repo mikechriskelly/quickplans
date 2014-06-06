@@ -276,9 +276,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
       moveAssociation : function(GUID, destinationItemMirror) {
         var deferred = $q.defer();
-        console.log(this.itemMirror);
+        console.log(destinationItemMirror);
         this.itemMirror.moveAssociation(GUID, destinationItemMirror, function(error) {
-          if (error) { deferred.reject(error); }
+          if (error) { console.log(error); deferred.reject(error); }
           deferred.resolve('Item moved to new folder');
         });
         return deferred.promise;   

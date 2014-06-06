@@ -27,8 +27,11 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
         // Move to a new folder (Shift left or right)
   			moveItem : function(destinationIM){
+          console.log(destinationIM);
+          console.log(destinationIM.itemMirror);
+
           this.parentIM.moveAssociation(this.guid, destinationIM.itemMirror)
-          .then(function(result) { return result; }, function(error) { console.log(error); });
+          .then(function(result) { console.log(result); return result; }, function(error) { console.log(error); });
         },
 
         // Change order/priority (Shift up or down)
@@ -38,8 +41,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           this.parentIM.deleteAssociation(this.guid)
           .then(function(result) { return result; }, function(error) { console.log(error); });
         },
-
-  			
 
   			toggleExpand : function(){
   				//if sub-folders - createIm, getAssociations, createLIs - set newIm as the parent for li, displayname , prev, next

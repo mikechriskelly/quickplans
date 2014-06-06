@@ -12,24 +12,21 @@ define(['./module','angular'],
       // Bind the full listed object to scope for the UI tree
       console.log('Result in Controller');
       console.log(result);
+      $scope.root = result;
       $scope.list = result.items;
       $scope.status = 'Loaded';
     });
 
     $scope.move = function(scope) {
       var listItem = scope.$modelValue;
-      console.log(listItem);
       // Simple test: try moving it to root folder
-      listItem.moveItem($scope.list);
+      listItem.moveItem($scope.list[0].parentIM);
     },
 
     $scope.delete = function(scope) {
       var listItem = scope.$modelValue;
-      console.log(listItem);
       listItem.deleteItem();
-      console.log(scope);
       scope.remove();
-      console.log(scope);
     };
 
     $scope.toggle = function(scope) {
