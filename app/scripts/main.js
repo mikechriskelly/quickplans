@@ -9,7 +9,7 @@ require.config({
     'angular-route': '../bower_components/angular-route/angular-route',
     'angular-ui-tree': '../bower_components/angular-ui-tree/dist/angular-ui-tree',
     'Dropbox': '//cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min',
-    'ItemMirror': 'http://keepingfoundthingsfound.com/apps/_shared/ItemMirror.min'
+    'ItemMirror': '../bower_components/itemMirrorWebClient/build/ItemMirror.dev'
   },
   shim: {
     'angular' : {'exports' : 'angular'},
