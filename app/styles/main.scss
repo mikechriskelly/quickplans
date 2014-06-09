@@ -109,6 +109,24 @@ span.buttons {
     color: rgb(255,255,255);
 }
 
+span.glyphicon-list {
+    font-size:19px;
+}
+
+.glyphicon-bookmark {
+    font-size:19px;
+}
+
+.glyphicon-chevron-down{
+    font-size:10px;
+    text-decoration: none;
+}
+
+.glyphicon-chevron-right{
+    font-size:10px;
+    text-decoration: none;
+}
+
 div.cog {
     border: 2px solid;
     text-align: center;
@@ -122,9 +140,12 @@ div.logout {
     padding: 10px;
     margin: 10px;
 }
+
 li.inEditMode {
     font-weight: bold;
 }
+
+//hallo.inEditMode:hover + 
 
 .left-pane{
     height: 100%;
@@ -135,8 +156,22 @@ li.inEditMode {
 
 div.right-pane{
     height: 100%;
-    background-color: rgb(180,180,180);
+    background-color: #f4f6f7;
     height: 100%;
+}
+
+div.right-title {
+    font-size: 25px;
+    color:#335CD6;
+    padding: 10px;
+    padding-top: 20px;
+}
+
+div.left-title {
+    font-size: 25px;
+    color:#335CD6;
+    padding: 10px;
+    padding-top: 20px;
 }
 
 .note {
@@ -144,15 +179,15 @@ div.right-pane{
     padding: 20px;
     margin: 10px;
     background-color: white;  
-    border: 3px solid;
-    border-color: rgb(180,180,180);
-    border-raduis: 5px; 
+    //border: 3px solid;
+    //border-color: rgb(180,180,180);
+    //border-radius: 5px; 
 }
 
 li{ 
-    color: rgb(100,100,100);
+    //color: rgb(100,100,100);
     font-family: "Open Sans";
-    font-size: 25px;
+    font-size: 20px;
     margin-top: 5pt;
     margin-bottom: 5pt;
 }
@@ -171,16 +206,40 @@ li{
 
 .angular-ui-tree-handle {
     cursor:pointer !important;
-    background: #f8faff;
-    border: 1px solid #dae2ea;
     color: #7c9eb2;
     padding: 10px 10px;
+    width: 100%;
 }
+
+.angular-ui-tree-handle span.glyphicon-remove{
+    visibility: hidden;
+}
+
+.angular-ui-tree-handle span.glyphicon-move{
+    visibility: hidden;
+}
+
+.angular-ui-tree-handle span.glyphicon-plus{
+    visibility: hidden;
+}
+
 
 .angular-ui-tree-handle:hover {
     color: #438eb9;
     background: #f4f6f7;
     border-color: #dce2e8;
+}
+
+.angular-ui-tree-handle:hover span.glyphicon-remove{
+    visibility: visible;
+}
+
+.angular-ui-tree-handle:hover span.glyphicon-plus{
+    visibility: visible;
+}
+
+.angular-ui-tree-handle:hover span.glyphicon-move{
+    visibility: visible;
 }
 
 .angular-ui-tree-placeholder {
@@ -195,3 +254,55 @@ li{
     background-color: #687074 !important;
     color: #FFF !important;
 }
+
+
+.col-md-6 {
+    pading: 10px;
+}
+
+
+
+//Animation for Edit-Mode Enabled
+.glyphicon-pencil{
+    font-size: 30px;
+//hallo:focus .glyphicon-pencil{
+//    visibility: visible;
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 0.5s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+    
+    animation-name: blinker;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@-moz-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+*:focus {
+outline: none;
+border-left: solid 1px;
+}
+
