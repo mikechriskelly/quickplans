@@ -14,7 +14,8 @@ define(['./module','angular'],
       console.log(result);
       $scope.root = result;
       $scope.list = result.items;
-      $scope.status = 'Loaded';
+      $scope.loaded = true;
+      $scope.isdragactivated = false;
     });
 
     $scope.move = function(scope) {
@@ -31,13 +32,6 @@ define(['./module','angular'],
 
     $scope.toggle = function(scope) {
       scope.toggle();
-    };
-
-    // Trying to toggle drag. Not working yet.
-    $scope.dragEnabled = function(scope) {
-      console.log(scope);
-      console.log(scope.$parent);
-      scope.$parent.dragEnabled();
     };
 
     $scope.newSubItem = function(scope) {

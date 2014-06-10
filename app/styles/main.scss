@@ -15,7 +15,8 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 $bgDefault      : #e74c3c;
 $bgHighlight    : #c0392b;
 $colDefault     : #ffffff;
-$colHover       : #dddddd;
+$colHover       : #eeeeee;
+$colSelected    : #dddddd;
 
 html,body {
     height: 100%;
@@ -80,6 +81,7 @@ html,body {
             color: $colHover;
             background-color: $bgHighlight; }}
 }
+.toggle-arrow, .toggle-arrow:hover, .toggle-arrow:focus { text-decoration: none; }
 
 .clear {
     clear:both;
@@ -195,7 +197,7 @@ li{
 .listitem-text {
     width: 100%;
     height: 100%;
-    padding: 10px;
+    padding: 0px;
     z-index: 100;
 }
 
@@ -207,7 +209,7 @@ li{
 .angular-ui-tree-handle {
     cursor:pointer !important;
     color: #7c9eb2;
-    padding: 10px 10px;
+    padding: 5px 5px;
     width: 100%;
 }
 
@@ -302,7 +304,124 @@ li{
 }
 
 *:focus {
-outline: none;
-border-left: solid 1px;
+    outline: none;
+    color: #000;
+}
+
+// Facebook stlye loader
+#facebookG { width:59px }
+
+.facebook_blockG {
+    background-color:#335CD6;
+    border:1px solid #335CD6;
+    float:left;
+    height:42px;
+    margin-left:3px;
+    width:11px;
+    opacity:0.1;
+    -moz-animation-name:bounceG;
+    -moz-animation-duration:1.3s;
+    -moz-animation-iteration-count:infinite;
+    -moz-animation-direction:linear;
+    -moz-transform:scale(0.7);
+    -webkit-animation-name:bounceG;
+    -webkit-animation-duration:1.3s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-direction:linear;
+    -webkit-transform:scale(0.7);
+    -ms-animation-name:bounceG;
+    -ms-animation-duration:1.3s;
+    -ms-animation-iteration-count:infinite;
+    -ms-animation-direction:linear;
+    -ms-transform:scale(0.7);
+    -o-animation-name:bounceG;
+    -o-animation-duration:1.3s;
+    -o-animation-iteration-count:infinite;
+    -o-animation-direction:linear;
+    -o-transform:scale(0.7);
+    animation-name:bounceG;
+    animation-duration:1.3s;
+    animation-iteration-count:infinite;
+    animation-direction:linear;
+    transform:scale(0.7);
+}
+
+#blockG_1 {
+    -moz-animation-delay:0.39s;
+    -webkit-animation-delay:0.39s;
+    -ms-animation-delay:0.39s;
+    -o-animation-delay:0.39s;
+    animation-delay:0.39s;
+}
+
+#blockG_2 {
+    -moz-animation-delay:0.52s;
+    -webkit-animation-delay:0.52s;
+    -ms-animation-delay:0.52s;
+    -o-animation-delay:0.52s;
+    animation-delay:0.52s;
+}
+
+#blockG_3 {
+    -moz-animation-delay:0.65s;
+    -webkit-animation-delay:0.65s;
+    -ms-animation-delay:0.65s;
+    -o-animation-delay:0.65s;
+    animation-delay:0.65s;
+}
+
+@-moz-keyframes bounceG{
+0%{
+-moz-transform:scale(1.2);
+opacity:1}
+
+100%{
+-moz-transform:scale(0.7);
+opacity:0.1}
+
+}
+
+@-webkit-keyframes bounceG{
+0%{
+-webkit-transform:scale(1.2);
+opacity:1}
+
+100%{
+-webkit-transform:scale(0.7);
+opacity:0.1}
+
+}
+
+@-ms-keyframes bounceG{
+0%{
+-ms-transform:scale(1.2);
+opacity:1}
+
+100%{
+-ms-transform:scale(0.7);
+opacity:0.1}
+
+}
+
+@-o-keyframes bounceG{
+0%{
+-o-transform:scale(1.2);
+opacity:1}
+
+100%{
+-o-transform:scale(0.7);
+opacity:0.1}
+
+}
+
+@keyframes bounceG{
+0%{
+transform:scale(1.2);
+opacity:1}
+
+100%{
+transform:scale(0.7);
+opacity:0.1}
+
 }
 
