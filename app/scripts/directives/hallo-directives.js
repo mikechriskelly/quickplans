@@ -11,6 +11,7 @@ define(['./module','angular'], function (directives,angular) {
       return {
           restrict: 'E',
           require: '?ngModel',
+          scope: { listitem: '=' },
           link: function(scope, element, attrs, ngModel) {
               if (!ngModel) {
                   return;
@@ -25,8 +26,14 @@ define(['./module','angular'], function (directives,angular) {
               };
 
               element.on('hallodeactivated', function() {
+                // Rename the list item only if the user has changed it
+                if(scope.listitem.title !== element.html()) {
+                  // Update the local model
                   ngModel.$setViewValue(element.html());
                   scope.$apply();
+                  // Have itemMirror rename the folder
+                  scope.listitem.renameItem();
+                }
               });
 
               element.on('keydown', function($event){

@@ -15,7 +15,7 @@
         <a class="toggle-arrow" data-nodrag ng-click="toggle(this)">
           <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
         </a>
-        <hallo data-nodrag ng-model="item.title" class="listitem-text">{{item.title}}</hallo>
+        <hallo data-nodrag ng-model="item.title" data-listitem="item" class="listitem-text">{{item.title}}</hallo>
           <a class="pull-right" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
           <a class="pull-right" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
           <a class="pull-right" style="margin-right: 8px;"><span class="glyphicon glyphicon-move"></span></a>

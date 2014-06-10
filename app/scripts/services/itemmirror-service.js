@@ -285,9 +285,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
       
       // Not yet implemented in the itemMirror library
-      renameLocalItem : function(GUID) {
+      renameLocalItem : function(GUID, newName) {
         var deferred = $q.defer();
-        this.itemMirror.renameLocalItem(GUID, function(error) {
+        this.itemMirror.renameLocalItem(GUID, newName, function(error) {
           if (error) { deferred.reject(error); }
           deferred.resolve('Item renamed');
         });

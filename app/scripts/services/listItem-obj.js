@@ -21,8 +21,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
   		};
 
   		LI.prototype = {	
-  			renameItem : function(newTitle) {
-          this.parentIM.renameLocalItem(this.guid);
+  			renameItem : function() {
+          this.parentIM.renameLocalItem(this.guid, this.title)
+          .then(function(result) { console.log(result); return result; }, function(error) { console.log(error); });
         },
 
         // Move to a new folder (Shift left or right)
@@ -44,7 +45,11 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
   			toggleExpand : function(){
   				//if sub-folders - createIm, getAssociations, createLIs - set newIm as the parent for li, displayname , prev, next
-  			}
+  			},
+        
+        addChildItem : function(){
+
+        }
   		};
 
   		return LI;
