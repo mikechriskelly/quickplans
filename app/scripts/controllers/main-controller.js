@@ -13,7 +13,17 @@ define(['./module','angular'],
       $scope.root = result;
       $scope.list = result.items;
       $scope.loaded = true;
+      $scope.currentNotes = [];
     });
+
+    $scope.showNotes = function(scope) {
+      var listItem = scope.$modelValue;
+      // displaytext and associateditem (url)
+      listItem.getPhantomNotes()
+      .then(function(result) {
+        $scope.currentNotes = result;
+      }, function(error) { console.log(error); });
+    };
 
     $scope.move = function(scope) {
       var listItem = scope.$modelValue;
@@ -31,19 +41,12 @@ define(['./module','angular'],
       scope.toggle();
     };
 
-    // $scope.newSubItem = function(scope) {
-    //   var listItem = scope.$modelValue;
-    //   var newTitle = '';
-    //   var newListItem = new LI(assoc.GUID, newTitle, imObj);
-    //   listItem.items.push({
-    //     guid: nodeData.id * 10 + nodeData.items.length,
-    //     title: newTitle,
-    //     items: []
-    //   });
-    //   console.log(newTitle);
-    //   im.createAssociation(newTitle)
-    //     .then(function(result) { console.log(result) }, function(reason) { console.log('Failed: ' + reason); });
-    // };
+    $scope.newSubItem = function(scope) {
+      // var listItem = scope.$modelValue;
+      // listItem.addChildItem();
+      var listItem = scope.$modelValue;
+      listItem.addChildItem();
+    };
 
   }]);
 });

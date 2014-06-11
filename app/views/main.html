@@ -11,7 +11,7 @@
       </div>
     </div>
     <script type="text/ng-template" id="items_renderer.html">
-      <div ui-tree-handle>
+      <div ui-tree-handle ng-click="showNotes(this)">
         <a class="toggle-arrow" data-nodrag ng-click="toggle(this)">
           <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
         </a>
@@ -36,8 +36,8 @@
       <span class="glyphicon glyphicon-bookmark"></span> Notes and Files
       <a href="#"><span class="pull-right glyphicon glyphicon-plus"></span></a>
     </div>
-    <div class="note">
-      <p>Phantom Note</p>
+    <div class="note" ng-repeat="note in currentNotes">
+      <p>{{note}}</p>
       <a class="pull-right" href="#"><span class="glyphicon glyphicon-trash"></span></a></div>
     </div>
   </div>

@@ -44,21 +44,21 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           readIfExists: true
         }
       };
+
+      // Object Properties
+      this.itemMirror = null;
+      this.GUID = null;
+      this.displayName = null;
+      this.priority = 0; // object of association attributes to be assigned to LI
+
+      this.associationGUIDs = [];      // string array of all GUIDs
+      this.phantomGUIDs = [];    // string array of phantom assoc GUIDs only
+      this.notes = {};          // kay-value object. Key = GUID. Value = diplayname
+
+      this.namespaceURI = 'quickplans'; // URI for this webapp
     }
 
     IM.prototype = {
-
-      // Object Properties
-      itemMirror : null,
-      GUID: null,
-      displayName: null,
-      priority : 0, // object of association attributes to be assigned to LI
-
-      associations : [],          // object array with title and guid as properties
-      associationGUIDs : [],      // string array of all GUIDs
-      phantomAssociations: [],    // string array of phantom assoc GUIDs only
-
-      namespaceURI : 'quickplans', // URI for this webapp
 
       // Use to create first ItemMirror from root or initial folder
       constructItemMirror : function() {
@@ -166,15 +166,15 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       },
 
       // Gets display names of a GUID array
-      getAssociationNames : function(GUIDs) {
+      // Use for PHANTOM ASSOCIATIONS
+      getPhantomDisplayText : function() {
         var self = this;
-        // If GUIDs is not provided as a param, check for locally stored GUIDs
-        GUIDs = GUIDs || this.associationGUIDs;
+        var GUIDs = this.phantomGUIDs;
         var promises = GUIDs.map(function(GUID) {
           var deferred  = $q.defer();
           self.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
-            if (error) { deferred.reject(error); }
-            self.associations.push(displayText);
+            // Only push into 
+            if (!error) { self.notes[GUID] = displayText; }
             deferred.resolve(displayText);
           });
           return deferred.promise;
@@ -239,7 +239,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
               deferred.resolve(GUID); 
             } else {
               // Store GUIDS for phantom assoc in local array so they can be used later
-              self.phantomAssociations.push(GUID);
+              self.phantomGUIDs.push(GUID);
               // Return null value to be filtered out below
               // It's necessary to return some value in order for q.all to succeed
               deferred.resolve(null); 

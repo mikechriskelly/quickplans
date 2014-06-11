@@ -10,15 +10,18 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
     function buildList(dropboxClient) {
       client = dropboxClient;
 
-      // Create the ListItem for Root (GUID, title [, parentIM])
-      // All other list items will be nested in this one
-      listItems = new LI('root','root');
-
       // Create the IM for root and call the recursive helper function to build the whole list
       var deferred = $q.defer();
       var rootIM = new IM(client);
       rootIM.constructItemMirror()
-      .then(function(rootIM) { return buildTreeRecursive(rootIM, listItems); })
+      .then(function(rootIM) {
+
+        // Create the ListItem for Root (GUID, title [, parentIM, selfIM])
+        // All other list items will be nested in this one
+        listItems = new LI('root','root', null, rootIM);  
+
+        return buildTreeRecursive(rootIM, listItems); 
+      })
       .then(function() { 
         console.log('Finished Building List');
         deferred.resolve(listItems);
@@ -47,7 +50,8 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         .then(function(associations) { 
           return $q.all(associations.map(function(assoc) {
             // Create an LI and insert it inside the liObj
-            var newListItem = new LI(assoc.GUID, assoc.displayName, imObj);
+            // imObj is the parent IM and assoc is the selfIM
+            var newListItem = new LI(assoc.GUID, assoc.displayName, imObj, assoc);
             newListItem.priority = assoc.priority;
             liObj.items.push(newListItem);
             // Recursive call with new IM and LI objects
