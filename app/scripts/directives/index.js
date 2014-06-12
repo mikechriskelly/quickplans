@@ -1,3 +1,4 @@
 define([
-     './hallo-directives'
+     './hallo-directives',
+     './init-focus'
 ], function () {});

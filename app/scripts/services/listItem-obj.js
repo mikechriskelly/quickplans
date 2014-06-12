@@ -12,6 +12,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         // Essential properties for UI tree
   			this.guid = GUID;
   			this.title = title;
+        this.tempTitle = this.title;
   			this.items = [];
 
         // Association properties from XooML
@@ -24,10 +25,14 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
   		LI.prototype = {	
 
         getPhantomNotes : function() {
-          var self = this;
-          return this.selfIM.getPhantomDisplayText()
+          var imObj = this.selfIM;
+          // Return nothing if the listItem doesn't have a selfIM yet
+          if(!imObj) { return $q.when(null); }
+
+          return imObj.getPhantomDisplayText()
+          .then(function(result) { return imObj.getPhantomURL(); })
           .then(function(result) { 
-            return self.selfIM.notes; 
+            return imObj.notes; 
           }, function(error) { 
             return error; 
           });
@@ -76,14 +81,33 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
   			},
 
         addChildItem : function() {
-          // TODO work in progress -- selfIM or parentIM?
-          //   .then(function(result) { return this.selfIM.createAssociation(newTitle); })
-          //   .then(function(result) { return new LI(assoc.GUID, newTitle, imObj); })
-          //   .then(function(result) {
-          //     listItem.items.push(newListItem);
-          //   })
-          //   .then(function(result) { console.log(result) }, function(reason) { console.log('Failed: ' + reason); });
-          // }            
+          // Use temp info to create LI immediately
+          var tempTitle = 'New Item ' + String(this.items.length + 1);
+          var tempGUID = Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+          
+          // Create new LI and add it to the model
+          var newLiObj = new LI(tempGUID, null, this.selfIM, null);
+          this.items.push(newLiObj);
+
+          // Async code to make and set the selfIM for the new liObj
+          var self = this;
+          return this.selfIM.createAssociation(tempTitle)
+          .then(function(GUID) { return self.selfIM.createIMsForGroupingItems([GUID]); })
+          .then(function(IMs) {
+            var imObj = IMs[0];
+            for(var i = 0; i < self.items.length; i++) {
+              if(self.items[i].guid === tempGUID) {
+                var liObj = self.items[i];
+                // Set the permanent GUID and SelfIM
+                liObj.selfIM = imObj;
+                liObj.guid =imObj.GUID;
+                liObj.tempTitle = tempTitle;
+              }
+            }
+            return liObj;       
+          }, function(error) { 
+            return error; 
+          });            
         }
   		};
 

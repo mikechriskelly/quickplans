@@ -137,7 +137,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           if (error) { deferred.reject(error); }
           // Store new association in the local array of GUIDs
           self.associationGUIDs.push(GUID);
-          console.log(self.associationGUIDs);
           deferred.resolve(GUID);  
         });
         return deferred.promise;
@@ -173,9 +172,28 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var promises = GUIDs.map(function(GUID) {
           var deferred  = $q.defer();
           self.itemMirror.getAssociationDisplayText(GUID, function(error, displayText) {
-            // Only push into 
-            if (!error) { self.notes[GUID] = displayText; }
+            if (!error) { 
+              if(self.notes[GUID] === undefined) { self.notes[GUID] = {}; }
+              self.notes[GUID].text = displayText;
+            }
             deferred.resolve(displayText);
+          });
+          return deferred.promise;
+        });
+        return $q.all(promises);
+      },
+
+      getPhantomURL : function() {
+        var self = this;
+        var GUIDs = this.phantomGUIDs;
+        var promises = GUIDs.map(function(GUID) {
+          var deferred  = $q.defer();
+          self.itemMirror.getAssociationAssociatedItem(GUID, function(error, url) {
+            if (!error) { 
+              if(self.notes[GUID] === undefined) { self.notes[GUID] = {}; }
+              self.notes[GUID].url = url;
+            }
+            deferred.resolve(url);
           });
           return deferred.promise;
         });

@@ -9,7 +9,7 @@ define(['./module','angular'], function (directives,angular) {
 
   directives.directive('hallo', function() {
       return {
-          restrict: 'E',
+          restrict: 'E A',
           require: '?ngModel',
           scope: { listitem: '=' },
           link: function(scope, element, attrs, ngModel) {
@@ -26,6 +26,10 @@ define(['./module','angular'], function (directives,angular) {
               };
 
               element.on('hallodeactivated', function() {
+                // If user leaves field blank then revert to temp title
+                if(element.html == '') {
+                  scope.listitem.title = scope.listItem.tempTitle;
+                }
                 // Rename the list item only if the user has changed it
                 if(scope.listitem.title !== element.html()) {
                   // Update the local model

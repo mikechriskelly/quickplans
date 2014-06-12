@@ -8,21 +8,27 @@ define(['./module','angular'],
     .then(function(result) { return listOp.buildList(result); })
     .then(function(result) {
       // Bind the full listed object to scope for the UI tree
-      console.log('Result in Controller');
       console.log(result);
       $scope.root = result;
       $scope.list = result.items;
       $scope.loaded = true;
-      $scope.currentNotes = [];
     });
 
+    $scope.projectTitle = 'Summer Vacation';
+    $scope.currentTitle = 'Summer Vacation';
+    $scope.currentNotes = [];
+
     $scope.showNotes = function(scope) {
+
       var listItem = scope.$modelValue;
+
+      $scope.currentTitle = listItem.title;
+
       // displaytext and associateditem (url)
       listItem.getPhantomNotes()
       .then(function(result) {
         $scope.currentNotes = result;
-      }, function(error) { console.log(error); });
+      }, function(error) { console.log('Error:' + error); });
     };
 
     $scope.move = function(scope) {
@@ -42,8 +48,6 @@ define(['./module','angular'],
     };
 
     $scope.newSubItem = function(scope) {
-      // var listItem = scope.$modelValue;
-      // listItem.addChildItem();
       var listItem = scope.$modelValue;
       listItem.addChildItem();
     };

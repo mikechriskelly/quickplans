@@ -1,9 +1,9 @@
 <div class="row fullheight">
-  <div class="col-md-6">
+  <div class="col-md-6 left-pane">
 
     <!-- Nested list template -->
     <div class="right-title">
-      <span class="glyphicon glyphicon-th-list"></span> Folder Items
+      <span class="glyphicon glyphicon-th-list"></span> {{ projectTitle }}
       <div id="facebookG" class="pull-right" ng-hide="loaded">
         <div id="blockG_1" class="facebook_blockG"></div>
         <div id="blockG_2" class="facebook_blockG"></div>
@@ -12,13 +12,17 @@
     </div>
     <script type="text/ng-template" id="items_renderer.html">
       <div ui-tree-handle ng-click="showNotes(this)">
-        <a class="toggle-arrow" data-nodrag ng-click="toggle(this)">
-          <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
-        </a>
-        <hallo data-nodrag ng-model="item.title" data-listitem="item" class="listitem-text">{{item.title}}</hallo>
-          <a class="pull-right" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
-          <a class="pull-right" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
-          <a class="pull-right" style="margin-right: 8px;"><span class="glyphicon glyphicon-move"></span></a>
+        <div class="toggle-arrow">
+          <a data-nodrag ng-click="toggle(this)">
+            <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
+          </a>
+        </div>
+        <span hallo data-nodrag ng-model="item.title" data-listitem="item" data-init-focus class="listitem-text">{{item.title}}</span>
+        <div class="list-buttons"> 
+          <a data-nodrag ng-click="newSubItem(this)" style="margin-right: 5px;"><span class="glyphicon glyphicon-plus"></span></a>
+          <a data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+          <a style="margin-right: 5px;"><span class="glyphicon glyphicon-move"></span></a>
+        </div>
       </div>
       <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
         <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer.html'">
@@ -31,13 +35,14 @@
       </ol>
     </div>
   </div>
-  <div class="col-md-6 right-pane">
+  <div class="col-md-6">
     <div class="right-title">
-      <span class="glyphicon glyphicon-bookmark"></span> Notes and Files
+      <span class="glyphicon glyphicon-bookmark"></span> {{ currentTitle }}
       <a href="#"><span class="pull-right glyphicon glyphicon-plus"></span></a>
     </div>
     <div class="note" ng-repeat="note in currentNotes">
-      <p>{{note}}</p>
+      <p>{{ note.text }}</p>
+      <a class="pull-left" href="{{ note.url }}">{{ note.url }}</a>
       <a class="pull-right" href="#"><span class="glyphicon glyphicon-trash"></span></a></div>
     </div>
   </div>
