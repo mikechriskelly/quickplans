@@ -6,6 +6,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
     // Private variables
     var client;
     var listItems;
+    var sortedListItems;
 
     function buildList(dropboxClient) {
       client = dropboxClient;
@@ -19,12 +20,21 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         // Create the ListItem for Root (GUID, title [, parentIM, selfIM])
         // All other list items will be nested in this one
         listItems = new LI('root','root', null, rootIM);  
+        sortedListItems = new LI('root','root', null, rootIM); 
 
         return buildTreeRecursive(rootIM, listItems); 
       })
-      .then(function() { 
+/*      .then(function() { 
         console.log('Finished Building List');
         deferred.resolve(listItems);
+      })*/
+      .then(function(){
+        return sortView();
+      })
+      .then(function() {
+        console.log('Finished Ordering List');
+        console.log(sortedListItems);
+        deferred.resolve(sortedListItems);
       });
 
       return deferred.promise;
@@ -47,6 +57,13 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
             return imObj.getAssociationNamespaceAttribute('priority', assoc);
           }));
         })
+        .then(function(associations){
+          //Adds a priority namespace attribute to folders which do not have one
+          return $q.all(associations.map(function(assoc){
+            return imObj.addAssociationNamespaceAttribute('priority', assoc);
+          }));
+
+        })
         .then(function(associations) { 
           return $q.all(associations.map(function(assoc) {
             // Create an LI and insert it inside the liObj
@@ -61,13 +78,62 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         });
     }
 
-    function orderView() {
+    function sortView() {
       //takes in created listElements
-    };
+      console.log("Inside sort view");
+      var arr = listItems.items;
+      var prop = 'priority';
+      (function sortRecursive(tempLI,arr){
+          arr.sort(function (a, b) {
+              if (a[prop] < b[prop]) {
+                  return -1;
+              } else if (a[prop] > b[prop]) {
+                  return 1;
+              } else {
+                  return 0;
+              }
+          });
+          tempLI['items'] = arr;
+          for(var i=0;i<arr.length;i++){
+            if(arr[i].items.length != 0){
+                sortRecursive(arr[i],arr[i].items);
+            }
+          }
+      }(sortedListItems,arr));
+      return 1;
+    }
+
+    function setPriority(tempList){
+
+        function setPriorityForItems(items){
+            for(var i=0; i< items.length; i++){
+              items[i].priority = i+1;
+            }
+            return items;
+        }
+
+        function setPriorityRecursive(temp){
+            console.log("Inside recursive priority");
+            var items = setPriorityForItems(temp.items);
+            
+            return $q.all(items.map(function(item){
+              return item.parentIM.setAssociationNamespaceAttribute('priority', item.priority, item.selfIM);
+            }))
+            .then(function(){
+                return $q.all(items.map(function(item){
+                      console.log(item);
+                      return setPriorityRecursive(item);
+                }));
+            })
+        }  
+        return setPriorityRecursive(tempList); 
+
+    }
 
     //return the object, if this class should be written as 
     return {
-      'buildList' : buildList
+      'buildList' : buildList,
+      'setPriority' : setPriority
     };
 
   }]);

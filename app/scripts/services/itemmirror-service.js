@@ -108,16 +108,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         return $q.all(promises);
       },
 
-      // Adds the given attributeName to the association with the given GUID and namespaceURI.
-      // Use this to add prev, next, isExpanded attributes to new objects
-      addAssociationNamespaceAttribute : function(attributeName, GUID) {
-        var deferred = $q.defer();
-        this.itemMirror.addAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error) {
-          if (error) { deferred.reject(error); }
-          deferred.resolve();
-        });
-        return deferred.promise;
-      },
 
       createAssociation : function(name) {
         var self = this;
@@ -219,18 +209,46 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         return $q.all(promises);
       },
 
+
+      // Adds the given attributeName to the association with the given GUID and namespaceURI.
+      // Use this to add prev, next, isExpanded attributes to new objects
+      addAssociationNamespaceAttribute : function(attributeName, assocIM) {
+        var self = this;
+        var deferred = $q.defer();
+        var GUID = assocIM.guid;
+        this.itemMirror.addAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error) {
+          if (error) { deferred.reject(error); }
+          if (assocIM[attributeName] == -1){
+            assocIM[attributeName] = 0;
+            deferred.resolve(assocIM); 
+          }
+        });
+        return deferred.promise;
+      },
+
       getAssociationNamespaceAttribute : function(attributeName, assocIM) {
         var self = this;
         var deferred = $q.defer();
         var GUID = assocIM.guid;
         this.itemMirror.getAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error, associationNamespaceAttribute) {
           if (error) { deferred.reject(error); }
-          assocIM[attributeName] = associationNamespaceAttribute || 0;
+          assocIM[attributeName] = associationNamespaceAttribute || -1;
           deferred.resolve(assocIM);
         });
         return deferred.promise;
       },
 
+      setAssociationNamespaceAttribute : function(attributeName, attributeValue, assocIM) {
+        var self = this;
+        var deferred = $q.defer();
+        var GUID = assocIM.guid;
+        this.itemMirror.setAssociationNamespaceAttribute(attributeName, attributeValue, GUID, this.namespaceURI, function(error) {
+          if (error) { deferred.reject(error); }
+          assocIM[attributeName] = attributeValue;
+          deferred.resolve(assocIM);
+        });
+        return deferred.promise;
+      },     
       // Gets the name of the itemMirror object
       getDisplayName : function() {
         var self = this;

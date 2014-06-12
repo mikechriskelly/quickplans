@@ -3,7 +3,7 @@ define(['./module','angular'],
 
   'use strict';
 
-  controllers.controller('MainCtrl', ['$scope','listOp','dropboxAuth', function ($scope, listOp, dropboxAuth) {
+  controllers.controller('MainCtrl', ['$scope','$timeout','listOp','dropboxAuth', function ($scope, $timeout, listOp, dropboxAuth) {
     dropboxAuth.connectDropbox()
     .then(function(result) { return listOp.buildList(result); })
     .then(function(result) {
@@ -12,11 +12,28 @@ define(['./module','angular'],
       $scope.root = result;
       $scope.list = result.items;
       $scope.loaded = true;
+
+      $scope.projectTitle = 'Summer Vacation';
+      $scope.currentTitle = 'Summer Vacation';
+      $scope.currentNotes = [];
+
+      // Test flag
+      $scope.status = true;
     });
 
-    $scope.projectTitle = 'Summer Vacation';
-    $scope.currentTitle = 'Summer Vacation';
-    $scope.currentNotes = [];
+    var timer = false;
+    $scope.$watch('root', function(){
+      console.log("Inside Watch");
+      if($scope.status == true){
+          if(timer){
+            $timeout.cancel(timer);
+          }
+          timer = $timeout(function(){
+              listOp.setPriority($scope.root);
+              $scope.status = false;
+          },5000)
+      }
+    });
 
     $scope.showNotes = function(scope) {
 
@@ -33,12 +50,15 @@ define(['./module','angular'],
 
     $scope.move = function(scope) {
       var listItem = scope.$modelValue;
+      $scope.status = true;
+      console.log($scope.status);
       // Simple test: try moving it to root folder
       listItem.moveItem($scope.list[0].parentIM);
     };
 
     $scope.delete = function(scope) {
       var listItem = scope.$modelValue;
+      status = true;
       listItem.deleteItem();
       scope.remove();
     };
@@ -49,8 +69,10 @@ define(['./module','angular'],
 
     $scope.newSubItem = function(scope) {
       var listItem = scope.$modelValue;
+      status = true;
       listItem.addChildItem();
     };
+
 
   }]);
 });
