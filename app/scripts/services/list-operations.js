@@ -54,13 +54,13 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         .then(function(associations) { 
           // Retrieves all display names and sets them as local property for each IM object
           return $q.all(associations.map(function(assoc) { 
-            return imObj.getAssociationNamespaceAttribute('priority', assoc);
+            return imObj.addAssociationNamespaceAttribute('priority', assoc);
           }));
         })
         .then(function(associations){
           //Adds a priority namespace attribute to folders which do not have one
           return $q.all(associations.map(function(assoc){
-            return imObj.addAssociationNamespaceAttribute('priority', assoc);
+            return imObj.getAssociationNamespaceAttribute('priority', assoc);
           }));
 
         })
@@ -105,29 +105,28 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
     function setPriority(tempList){
 
-        function setPriorityForItems(items){
-            for(var i=0; i< items.length; i++){
-              items[i].priority = i+1;
-            }
-            return items;
+      function setPriorityForItems(items){
+        for(var i=0; i< items.length; i++){
+          items[i].priority = i+1;
         }
+        return items;
+      }
 
-        function setPriorityRecursive(temp){
-            console.log("Inside recursive priority");
-            var items = setPriorityForItems(temp.items);
-            
-            return $q.all(items.map(function(item){
-              return item.parentIM.setAssociationNamespaceAttribute('priority', item.priority, item.selfIM);
-            }))
-            .then(function(){
-                return $q.all(items.map(function(item){
-                      console.log(item);
-                      return setPriorityRecursive(item);
-                }));
-            })
-        }  
-        return setPriorityRecursive(tempList); 
-
+      function setPriorityRecursive(temp){
+        console.log('Inside recursive priority');
+        var items = setPriorityForItems(temp.items);
+        
+        return $q.all(items.map(function(item){
+          return item.parentIM.setAssociationNamespaceAttribute('priority', item.priority, item.selfIM);
+        }))
+        .then(function(){
+          return $q.all(items.map(function(item){
+            //console.log(item);
+            return setPriorityRecursive(item);
+          }));
+        });
+      }  
+      return setPriorityRecursive(tempList); 
     }
 
     //return the object, if this class should be written as 
