@@ -24,17 +24,18 @@
           <a style="margin-right: 5px;"><span class="glyphicon glyphicon-move"></span></a>
         </div>
       </div>
-      <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
+      <ol ui-tree-nodes="treeOptions" ng-model="item.items" ng-class="{hidden: collapsed}">
         <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer.html'">
         </li>
       </ol>
     </script>
-    <div ui-tree="options">
+    <div ui-tree="treeOptions">
       <ol ui-tree-nodes ng-model="list" >
         <li ng-repeat="item in list" ui-tree-node ng-include="'items_renderer.html'"></li>
       </ol>
     </div>
   </div>
+
   <div class="col-md-6">
     <div class="right-title">
       <span class="glyphicon glyphicon-bookmark"></span> {{ currentTitle }}
@@ -42,8 +43,10 @@
     </div>
     <div class="note" ng-repeat="note in currentNotes">
       <p>{{ note.text }}</p>
-      <a class="pull-left" href="{{ note.url }}">{{ note.url }}</a>
-      <a class="pull-right" href="#"><span class="glyphicon glyphicon-trash"></span></a></div>
+      <div class="endnote-text">
+        <a class="web-link pull-left" href="{{ note.url }}">{{ note.url }}</a>
+        <a class="pull-right" href="#"><span class="glyphicon glyphicon-trash"></span></a>
+      </div>
     </div>
   </div>
 </div>

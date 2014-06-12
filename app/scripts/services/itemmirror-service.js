@@ -216,10 +216,10 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var self = this;
         var deferred = $q.defer();
         var GUID = assocIM.GUID;
-        console.log(GUID);
+        //console.log(GUID);
         if(GUID) {
           this.itemMirror.addAssociationNamespaceAttribute(attributeName, GUID, this.namespaceURI, function(error) {
-            if(error) { console.log('Attribute already exists: ' + error); }
+            //if(error) { console.log('Attribute already exists: ' + error); }
             deferred.resolve(assocIM);
           });
         } else { 

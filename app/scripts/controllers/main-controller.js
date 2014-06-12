@@ -21,31 +21,33 @@ define(['./module','angular'],
       $scope.status = true;
     });
 
-    function censor(censor) {
-      var i = 0;
-      return function(key, value) {
-        if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
-          return '[Circular]'; 
-        if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
-          return '[Unknown]';
-        ++i; // so we know we aren't using the original object anymore
-        return value;  
-      };
-    }
+    // Angular UI Tree Options
+    $scope.treeOptions = {
+      // Callback function executed after drag-and-drop event
+      dragStop: function(event) {
+        var targetLI = event.source.nodeScope.$modelValue;
 
+        // Reference the new parent if the item is moved to a sublevel
+        var newParentLI = event.dest.nodesScope.$parent.$modelValue;
 
-    var timer = false;
-    $scope.$watch(function() {
-        return JSON.stringify($scope.root, censor($scope.root));
-      }, function() {
-        console.log('Inside Watch');
-        if(timer){
-          $timeout.cancel(timer);
+        // Reference a sibling if the item was moved to root level
+        var rootSiblingReference = event.dest.index > 0 ? 0 : 1;
+        var newSiblingLI = event.dest.nodesScope.$modelValue[rootSiblingReference];
+
+        if(newParentLI && targetLI.parentIM !== newParentLI.selfIM) {
+          
+          console.log('Moving to sublevel');
+          targetLI.moveItem(newParentLI.selfIM);
+          // TODO: Call order view
+
+        } else if(newSiblingLI && targetLI.parentIM !== newSiblingLI.parentIM) {
+          console.log('Moving to root');
+          targetLI.moveItem(newSiblingLI.parentIM);
+          // TODO: Call order view
         }
-        timer = $timeout(function(){
-          if($scope.root) { listOp.setPriority($scope.root); }
-        },5000);
-    });
+        // TODO: Else if parents are the same check if index changed 
+      }
+    };
 
     $scope.showNotes = function(scope) {
 
@@ -62,12 +64,11 @@ define(['./module','angular'],
 
     $scope.move = function(scope) {
       var listItem = scope.$modelValue;
-      $scope.status = true;
-      console.log($scope.status);
 
-      if(listItem)
+      //console.log(scope.$modelValue);
+      //console.log(scope.$parentNodeScope.$modelValue);
       // Simple test: try moving it to root folder
-      listItem.moveItem($scope.list[0].parentIM);
+      //listItem.moveItem($scope.list[0].parentIM);
     };
 
     $scope.delete = function(scope) {
