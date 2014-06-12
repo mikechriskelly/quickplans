@@ -193,6 +193,9 @@ li{
     margin-top: 5pt;
     margin-bottom: 5pt;
 }
+.priority-0 {
+    color: #E6B800;
+}
 
 
 .toggle-arrow {
@@ -276,25 +279,9 @@ li{
 
 
 
-//Animation for Edit-Mode Enabled
-.glyphicon-pencil{
-    font-size: 30px;
-//hallo:focus .glyphicon-pencil{
-//    visibility: visible;
-    -webkit-animation-name: blinker;
-    -webkit-animation-duration: 0.5s;
-    -webkit-animation-timing-function: linear;
-    -webkit-animation-iteration-count: infinite;
-    
-    -moz-animation-name: blinker;
-    -moz-animation-duration: 0.5s;
-    -moz-animation-timing-function: linear;
-    -moz-animation-iteration-count: infinite;
-    
-    animation-name: blinker;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+.glyphicon-file {
+    padding-right: 10px;
+    color: #335CD6;
 }
 
 @-moz-keyframes blinker {  

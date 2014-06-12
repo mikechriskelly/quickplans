@@ -17,10 +17,10 @@
             <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span>
           </a>
         </div>
-        <span hallo data-nodrag ng-model="item.title" data-listitem="item" data-init-focus class="listitem-text">{{item.title}}</span>
+        <span hallo data-nodrag ng-model="item.title" data-listitem="item" data-init-focus class="listitem-text priority-{{item.priority}}">{{item.title}}</span>
         <div class="list-buttons"> 
           <a data-nodrag ng-click="newSubItem(this)" style="margin-right: 5px;"><span class="glyphicon glyphicon-plus"></span></a>
-          <a data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+          <a data-nodrag ng-click="delete(this)"><span class="glyphicon glyphicon-remove"></span></a>
           <a style="margin-right: 5px;"><span class="glyphicon glyphicon-move"></span></a>
         </div>
       </div>

@@ -17,8 +17,6 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
         // Association properties from XooML
   			this.isExpanded = false;
-  			this.prev = null;
-  			this.next = null;
         this.priority = null;
   		}
 
@@ -50,11 +48,27 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
         // Move to a new folder (Shift left or right)
   			moveItem : function(destinationIM){
-          console.log(destinationIM);
-          console.log(destinationIM.itemMirror);
+
+          Array.prototype.diff = function(a) {
+            return this.filter(function(i) {return a.indexOf(i) < 0;});
+          };
+
+          var currentGUIDs = destinationIM.associationGUIDs.slice(0);
+
+          var self = this;
 
           return this.parentIM.moveAssociation(this.guid, destinationIM.itemMirror)
-          .then(function(result) { 
+          .then(function(result) { return self.selfIM.refresh(); })
+          .then(function(result) { return destinationIM.getAssociationGUIDs(); })
+          .then(function(GUIDs) { return GUIDs.diff(currentGUIDs); })
+          .then(function(GUIDs) { 
+            if(GUIDs.length === 1) {
+              self.guid = GUIDs[0];
+            }
+            self.parentIM = destinationIM;
+            return self; 
+          })
+          .then(function(result) {
             console.log(result); 
             return result; 
           }, function(error) { 
@@ -62,14 +76,11 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           });
         },
 
-        // Change order/priority (Shift up or down)
-        orderItem : function(destinationGUID) {
-
-        },
-
   			deleteItem : function() {
+          var self = this;
           return this.parentIM.deleteAssociation(this.guid)
           .then(function(result) { 
+            self.parentIM.refresh();
             return result; 
           }, function(error) { 
             return error; 

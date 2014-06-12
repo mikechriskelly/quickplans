@@ -60,6 +60,21 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
     IM.prototype = {
 
+      refresh : function() {
+        var self = this;
+        var deferred = $q.defer();
+        if(this.itemMirror) { 
+          this.itemMirror.refresh(function(error) {
+            if (error) { deferred.reject(error); }
+            console.log('ItemMirror object refreshed');
+            deferred.resolve(self);
+          });
+        } else {
+          deferred.reject('No itemMirror Object');
+        }
+        return deferred.promise;
+      },
+
       // Use to create first ItemMirror from root or initial folder
       constructItemMirror : function() {
         var self = this;

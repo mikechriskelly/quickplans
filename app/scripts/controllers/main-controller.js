@@ -35,17 +35,17 @@ define(['./module','angular'],
         var newSiblingLI = event.dest.nodesScope.$modelValue[rootSiblingReference];
 
         if(newParentLI && targetLI.parentIM !== newParentLI.selfIM) {
-          
           console.log('Moving to sublevel');
           targetLI.moveItem(newParentLI.selfIM);
-          // TODO: Call order view
-
+          listOp.setPriority($scope.root);
         } else if(newSiblingLI && targetLI.parentIM !== newSiblingLI.parentIM) {
           console.log('Moving to root');
           targetLI.moveItem(newSiblingLI.parentIM);
-          // TODO: Call order view
-        }
-        // TODO: Else if parents are the same check if index changed 
+          listOp.setPriority($scope.root);
+        } else if(event.source.index !== event.dest.index) {
+          listOp.setPriority($scope.root);
+          console.log('From ' + event.source.index + ' to ' + event.dest.index);
+        } 
       }
     };
 
@@ -58,22 +58,13 @@ define(['./module','angular'],
       // displaytext and associateditem (url)
       listItem.getPhantomNotes()
       .then(function(result) {
+        console.log(result);
         $scope.currentNotes = result;
       }, function(error) { console.log('Error:' + error); });
     };
 
-    $scope.move = function(scope) {
-      var listItem = scope.$modelValue;
-
-      //console.log(scope.$modelValue);
-      //console.log(scope.$parentNodeScope.$modelValue);
-      // Simple test: try moving it to root folder
-      //listItem.moveItem($scope.list[0].parentIM);
-    };
-
     $scope.delete = function(scope) {
       var listItem = scope.$modelValue;
-      status = true;
       listItem.deleteItem();
       scope.remove();
     };
