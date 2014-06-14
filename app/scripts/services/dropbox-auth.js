@@ -2,30 +2,48 @@ define(['./module','angular'], function (services,angular) {
 
 'use strict';
 
-  // Check if dependencies are in scope
-  // console.log('jquery: ' + typeof($));
-  // console.log('ItemMirror: ' + typeof(ItemMirror));
-  // console.log('Dropbox: ' + typeof(Dropbox));
-
   services.factory('dropboxAuth', ['$q',function($q) {
-
+    console.log('Dropbox factory');
     var dropboxClientCredentials = {
       key: 'jrt7eykb5odmd98',
-      secret: 'ayrxakqedjss46f',
-      token: 'FgXq-pbmMH4AAAAAAAABfcc2ZhVM9cQDGgIEHBc-Yz7a1403SpYZXBjqzIfVUAJ5'
+      secret: 'ayrxakqedjss46f'
     };
 
     var dropboxClient = new Dropbox.Client(dropboxClientCredentials);
+    var authenticatedClient = null;
+
+    function getClient() {
+      return authenticatedClient;
+    }
+
+    function connectDropbox() {
+      var deferred = $q.defer();
+
+      if(authenticatedClient) {
+        console.log('Dropbox already authenticated');
+        deferred.resolve(authenticatedClient);
+      } else {
+        console.log('Dropbox is authenticating');
+        dropboxClient.authenticate(function (error, client) {
+            if (error) { deferred.reject(error); }
+            authenticatedClient = client;
+            deferred.resolve(client);
+
+            // Need this redirect to prevent digest from entering an infinite loop
+            window.location.href = window.location.href + '#';
+        });       
+      }
+      return deferred.promise;
+    }
+  
+    function disconnectDropbox() {
+      dropboxClient.signOut();
+    }
 
     return{
-      connectDropbox : function() {
-          var deferred = $q.defer();
-          dropboxClient.authenticate(function (error, client) {
-              if (error) { deferred.reject(error); }
-              deferred.resolve(client);
-          });       
-          return deferred.promise;
-        }
+      connectDropbox : connectDropbox,
+      disconnectDropbox : disconnectDropbox,
+      getClient : getClient
     };
 
   }]);

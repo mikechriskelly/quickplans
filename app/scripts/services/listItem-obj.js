@@ -37,11 +37,26 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         },
 
   			renameItem : function() {
+          var self = this;
+          console.log(self.selfIM);
           return this.parentIM.renameLocalItem(this.guid, this.title)
+          .then(function(result) { return self.parentIM.refresh(); })
+          .then(function(result) {
+
+            var pathArray = self.selfIM.itemMirror._groupingItemURI.split('/');
+            pathArray[pathArray.length-1] = self.title;
+            var newPath = pathArray.join('/');
+
+            self.selfIM.itemMirror._groupingItemURI = newPath;
+            self.selfIM.displayName = self.title;          
+            
+            return self.selfIM.refresh(); 
+          })
           .then(function(result) { 
             console.log(result); 
             return result; 
           }, function(error) { 
+            console.log('Error: ' + error); 
             return error;
           });
         },

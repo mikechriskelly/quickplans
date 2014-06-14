@@ -28,12 +28,16 @@ define(['./module','angular'], function (directives,angular) {
               element.on('hallodeactivated', function() {
                 // If user leaves field blank then revert to temp title
                 if(element.html == '') {
-                  scope.listitem.title = scope.listItem.tempTitle;
+                  scope.listitem.title = scope.listitem.tempTitle;
+                  ngModel.$setViewValue(scope.listitem.title);
                 }
                 // Rename the list item only if the user has changed it
                 if(scope.listitem.title !== element.html()) {
                   // Update the local model
                   ngModel.$setViewValue(element.html());
+                  console.log(scope);
+                  scope.listitem.tempTitle = element.html();
+                  scope.listitem.title = element.html();
                   scope.$apply();
                   // Have itemMirror rename the folder
                   scope.listitem.renameItem();
@@ -43,7 +47,8 @@ define(['./module','angular'], function (directives,angular) {
               element.on('keydown', function($event){
                 if($event.which === 13) {
                   $event.preventDefault();
-                  element.next().focus();
+                  // console.log(scope.$parent);
+                  // scope.listItem.newSubItem(this)
                 }
               });
           }

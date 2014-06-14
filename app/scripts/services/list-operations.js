@@ -1,15 +1,15 @@
 define(['./module','angular','ItemMirror'], function (services,angular,ItemMirror) {  
   'use strict';
   
-  services.factory('listOp', ['$q','LI','IM', function($q, LI, IM){
+  services.factory('listOp', ['$q','LI','IM','dropboxAuth', function($q, LI, IM, dropboxAuth){
 
     // Private variables
     var client;
     var listItems;
     var sortedListItems;
 
-    function buildList(dropboxClient) {
-      client = dropboxClient;
+    function buildList() {
+      client = dropboxAuth.getClient();
 
       // Create the IM for root and call the recursive helper function to build the whole list
       var deferred = $q.defer();
@@ -24,16 +24,12 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
 
         return buildTreeRecursive(rootIM, listItems); 
       })
-/*      .then(function() { 
-        console.log('Finished Building List');
-        deferred.resolve(listItems);
-      })*/
       .then(function(){
+        console.log('Finished Building List');
         return sortView();
       })
       .then(function() {
         console.log('Finished Ordering List');
-        console.log(sortedListItems);
         deferred.resolve(sortedListItems);
       });
 

@@ -64,9 +64,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         var self = this;
         var deferred = $q.defer();
         if(this.itemMirror) { 
-          this.itemMirror.refresh(function(error) {
+          this.itemMirror.sync(function(error) {
             if (error) { deferred.reject(error); }
-            console.log('ItemMirror object refreshed');
+            console.log('ItemMirror object synced');
             deferred.resolve(self);
           });
         } else {

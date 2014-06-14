@@ -3,9 +3,9 @@ define(['./module','angular'],
 
   'use strict';
 
-  controllers.controller('MainCtrl', ['$scope','$timeout','listOp','dropboxAuth', function ($scope, $timeout, listOp, dropboxAuth) {
+  controllers.controller('MainCtrl', ['$scope','listOp','dropboxAuth', function ($scope, listOp, dropboxAuth) {
     dropboxAuth.connectDropbox()
-    .then(function(result) { return listOp.buildList(result); })
+    .then(function() { return listOp.buildList(); })
     .then(function(result) {
       // Bind the full listed object to scope for the UI tree
       console.log(result);
@@ -75,8 +75,12 @@ define(['./module','angular'],
 
     $scope.newSubItem = function(scope) {
       var listItem = scope.$modelValue;
-      status = true;
       listItem.addChildItem();
+    };
+
+    $scope.signOut = function() {
+      dropboxAuth.disconnectDropbox();
+      console.log('Disconnected Dropbox from app');
     };
 
 
