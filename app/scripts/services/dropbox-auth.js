@@ -3,10 +3,15 @@ define(['./module','angular'], function (services,angular) {
 'use strict';
 
   services.factory('dropboxAuth', ['$q',function($q) {
-    console.log('Dropbox factory');
     var dropboxClientCredentials = {
-      key: 'jrt7eykb5odmd98',
-      secret: 'ayrxakqedjss46f'
+
+      // App credentials for app-specific Dropbox folder (Quickplans KFTF)
+      key: 'zvroy7qogrcueuz',
+      secret: '1ou4vueptnvkhpx'
+
+      // App credentials for full dropbox access (Project Plans)
+      // key: 'jrt7eykb5odmd98',
+      // secret: 'ayrxakqedjss46f'
     };
 
     var dropboxClient = new Dropbox.Client(dropboxClientCredentials);
@@ -20,17 +25,17 @@ define(['./module','angular'], function (services,angular) {
       var deferred = $q.defer();
 
       if(authenticatedClient) {
-        console.log('Dropbox already authenticated');
+        console.log('Dropbox authenticated');
         deferred.resolve(authenticatedClient);
       } else {
-        console.log('Dropbox is authenticating');
+        console.log('Dropbox authenticating...');
         dropboxClient.authenticate(function (error, client) {
             if (error) { deferred.reject(error); }
             authenticatedClient = client;
-            deferred.resolve(client);
 
             // Need this redirect to prevent digest from entering an infinite loop
             window.location.href = window.location.href + '#';
+            deferred.resolve(client);
         });       
       }
       return deferred.promise;

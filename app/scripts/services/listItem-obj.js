@@ -106,18 +106,19 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
   				//if sub-folders - createIm, getAssociations, createLIs - set newIm as the parent for li, displayname , prev, next
   			},
 
-        addChildItem : function() {
+        // Title is optional. If param is empty a temp title will be used
+        addChildItem : function(title) {
           // Use temp info to create LI immediately
           var tempTitle = 'New Item ' + String(this.items.length + 1);
           var tempGUID = Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
           
           // Create new LI and add it to the model
-          var newLiObj = new LI(tempGUID, null, this.selfIM, null);
+          var newLiObj = new LI(tempGUID, title, this.selfIM, null);
           this.items.push(newLiObj);
 
           // Async code to make and set the selfIM for the new liObj
           var self = this;
-          return this.selfIM.createAssociation(tempTitle)
+          return this.selfIM.createAssociation(title || tempTitle)
           .then(function(GUID) { return self.selfIM.createIMsForGroupingItems([GUID]); })
           .then(function(IMs) {
             var imObj = IMs[0];
@@ -127,7 +128,9 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
                 // Set the permanent GUID and SelfIM
                 liObj.selfIM = imObj;
                 liObj.guid =imObj.GUID;
-                liObj.tempTitle = tempTitle;
+                if(!title) { 
+                  liObj.tempTitle = tempTitle;
+                }
               }
             }
             return liObj;       

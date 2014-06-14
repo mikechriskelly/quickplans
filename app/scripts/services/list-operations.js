@@ -7,9 +7,12 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
     var client;
     var listItems;
     var sortedListItems;
+    var MAXDEPTH = 2;
+    var currentDepth = 0;
 
     function buildList() {
       client = dropboxAuth.getClient();
+      console.log(client);
 
       // Create the IM for root and call the recursive helper function to build the whole list
       var deferred = $q.defer();
@@ -25,11 +28,11 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
         return buildTreeRecursive(rootIM, listItems); 
       })
       .then(function(){
-        console.log('Finished Building List');
+        //console.log('Finished Building List');
         return sortView();
       })
       .then(function() {
-        console.log('Finished Ordering List');
+        //console.log('Finished Ordering List');
         deferred.resolve(sortedListItems);
       });
 
@@ -37,7 +40,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
     }
 
     function buildTreeRecursive(imObj,liObj) {
-      console.log('Called buildTreeRecursive');
+      //console.log('Called buildTreeRecursive');
       return imObj.getAssociationGUIDs()
         .then(function(GUIDs) { return imObj.getGroupingItems(GUIDs); })
         .then(function(GUIDs) { return imObj.createIMsForGroupingItems(GUIDs); })
@@ -58,25 +61,32 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           return $q.all(associations.map(function(assoc){
             return imObj.getAssociationNamespaceAttribute('priority', assoc);
           }));
-
         })
         .then(function(associations) { 
+          currentDepth++;
           return $q.all(associations.map(function(assoc) {
             // Create an LI and insert it inside the liObj
             // imObj is the parent IM and assoc is the selfIM
             var newListItem = new LI(assoc.GUID, assoc.displayName, imObj, assoc);
             newListItem.priority = assoc.priority;
             liObj.items.push(newListItem);
+            
             // Recursive call with new IM and LI objects
-            // TODO: if isExpanded else return null 
-            return buildTreeRecursive(assoc, newListItem);
+            if(currentDepth < MAXDEPTH) {
+              return buildTreeRecursive(assoc, newListItem);
+            } else {
+              // Return empty array as base case for max depth and reset depth
+              // TODO: Implement isExpanded property instead of maxDepth 
+              currentDepth = 0;
+              return [];
+            }
           }));
         });
     }
 
     function sortView() {
       //takes in created listElements
-      console.log("Inside sort view");
+      //console.log('Inside sort view');
       var arr = listItems.items;
       var prop = 'priority';
       (function sortRecursive(tempLI,arr){
@@ -91,7 +101,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
           });
           tempLI['items'] = arr;
           for(var i=0;i<arr.length;i++){
-            if(arr[i].items.length != 0){
+            if(arr[i].items.length !== 0){
                 sortRecursive(arr[i],arr[i].items);
             }
           }
@@ -109,7 +119,7 @@ define(['./module','angular','ItemMirror'], function (services,angular,ItemMirro
       }
 
       function setPriorityRecursive(temp){
-        console.log('Inside recursive priority');
+        //console.log('Inside recursive priority');
         var items = setPriorityForItems(temp.items);
         
         return $q.all(items.map(function(item){

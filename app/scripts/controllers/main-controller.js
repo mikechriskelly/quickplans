@@ -9,12 +9,18 @@ define(['./module','angular'],
     .then(function(result) {
       // Bind the full listed object to scope for the UI tree
       console.log(result);
+
+      // Add a first item if the root folder is empty
+      if(result.items.length === 0) {
+        result.addChildItem('My First Project');
+      }
+
       $scope.root = result;
       $scope.list = result.items;
       $scope.loaded = true;
 
-      $scope.projectTitle = 'Summer Vacation';
-      $scope.currentTitle = 'Summer Vacation';
+      $scope.projectTitle = 'Folder Items';
+      $scope.currentTitle = 'Notes and Files';
       $scope.currentNotes = [];
 
       // Test flag
@@ -58,7 +64,6 @@ define(['./module','angular'],
       // displaytext and associateditem (url)
       listItem.getPhantomNotes()
       .then(function(result) {
-        console.log(result);
         $scope.currentNotes = result;
       }, function(error) { console.log('Error:' + error); });
     };
