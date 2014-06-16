@@ -10,7 +10,7 @@
     "es5-shim": "latest",
     "jquery": "latest",
     "hallo.js": "latest",
-    "bootstrap-sass-official": "latest",
+    "sass-bootstrap": "latest",
     "angular-resource": "latest",
     "angular-cookies": "latest",
     "angular-sanitize": "latest",
